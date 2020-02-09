@@ -107,14 +107,28 @@ Tokyu$Tokyu.Return <- (Tokyu$Tokyu.Close-Tokyu$Tokyu.Open)/Tokyu$Tokyu.Open
 Tokyu$RF.Return <- (JPRF$Return)
 Tokyu$MKT.Return <- (JPMKT$Return)
 
-# Calculating Abnormal Return
+#Calculating Abnormal Return and Cumulative Abnormal Return
 
+#Amada:
 Amada$Amada.AR <- Amada$Amada.Return-Amada$MKT.Return
-
-
-# Calculating Cumulative Abnormal Return
-
 Amada$Amada.CAR <- cumsum(Amada$Amada.AR)
+
+#Hokuetsu Corporation:
+Hokuetsu$Hokuetsu.AR <- Hokuetsu$Hokuetsu.Return-Hokuetsu$MKT.Return
+Hokuetsu$Hokuetsu.CAR <- cumsum(Hokuetsu$Hokuetsu.AR)
+
+#Mitsubishi Motors:
+Mitsubishi$Mitsubishi.AR <- Mitsubishi$Mitsubishi.Return-Mitsubishi$MKT.Return
+Mitsubishi$Mitsubishi.CAR <- cumsum(Mitsubishi$Mitsubishi.AR)
+
+#Secom:
+Secom$Secom.AR <- Secom$Secom.Return-Secom$MKT.Return
+Secom$Secom.CAR <- cumsum(Secom$Secom.AR)
+
+#Tokyu Fudosan Holdings Corporation:
+Tokyu$Tokyu.AR <- Tokyu$Tokyu.Return-Tokyu$MKT.Return
+Tokyu$Tokyu.CAR <- cumsum(Tokyu$Tokyu.AR)
+
 
 
 # Plot CAR
