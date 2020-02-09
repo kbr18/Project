@@ -147,3 +147,4 @@ summary(tree.Amada)
 
 plot(Amada.CAR[39:50])
 
+# Trees
