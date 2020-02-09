@@ -83,53 +83,122 @@ JPMKT$Return <- (JPMKT$Close-JPMKT$Open)/JPMKT$Open
 #Stock Data
 
 #Amada:
+#Calculating Return
 Amada$Amada.Return <- (Amada$Amada.Close-Amada$Amada.Open)/Amada$Amada.Open
 Amada$RF.Return <- (JPRF$Return)
 Amada$MKT.Return <- (JPMKT$Return)
 
+#Calculating Abnormal Return and Cumulative Abnormal Return
+Amada$Amada.AR <- Amada$Amada.Return-Amada$MKT.Return
+Amada$Amada.CAR <- cumsum(Amada$Amada.AR)
+
+#Plot Graphs
+Amada$Amada.DateNum <- 1:nrow(Amada) 
+
+plot(Amada$Amada.Return)
+
+plot(Amada$Amada.CAR)
+plot(Amada$Amada.CAR[1:38])
+plot(Amada$Amada.CAR[39:88])
+
+Amada.EP <- Amada[1:38,] #Creating a subset for the Estimation Period, from 9th May to 29th June
+Amada.EW<- Amada[39:88,] #Creating a subset for the Event Window, from 2nd July to 7th September
+
+
 #Hokuetsu Corporation:
+#Calculating Return
 Hokuetsu$Hokuetsu.Return <- (Hokuetsu$Hokuetsu.Close-Hokuetsu$Hokuetsu.Open)/Hokuetsu$Hokuetsu.Open
 Hokuetsu$RF.Return <- (JPRF$Return)
 Hokuetsu$MKT.Return <- (JPMKT$Return)
 
+#Calculating Abnormal Return and Cumulative Abnormal Return
+Hokuetsu$Hokuetsu.AR <- Hokuetsu$Hokuetsu.Return-Hokuetsu$MKT.Return
+Hokuetsu$Hokuetsu.CAR <- cumsum(Hokuetsu$Hokuetsu.AR)
+
+#Plot Graphs
+Hokuetsu$Hokuetsu.DateNum <- 1:nrow(Hokuetsu) 
+
+plot(Hokuetsu$Hokuetsu.Return)
+
+plot(Hokuetsu$Hokuetsu.CAR)
+plot(Hokuetsu$Hokuetsu.CAR[1:38])
+plot(Hokuetsu$Hokuetsu.CAR[39:88])
+
+Hokuetsu.EP <- Hokuetsu[1:38,] #Creating a subset for the Estimation Period, from 9th May to 29th June
+Hokuetsu.EW<- Hokuetsu[39:88,] #Creating a subset for the Event Window, from 2nd July to 7th September
+
+
 #Mitsubishi Motors:
+#Calculating Return
 Mitsubishi$Mitsubishi.Return <- (Mitsubishi$Mitsubishi.Close-Mitsubishi$Mitsubishi.Open)/Mitsubishi$Mitsubishi.Open
 Mitsubishi$RF.Return <- (JPRF$Return)
 Mitsubishi$MKT.Return <- (JPMKT$Return)
 
+#Calculating Abnormal Return and Cumulative Abnormal Return
+Mitsubishi$Mitsubishi.AR <- Mitsubishi$Mitsubishi.Return-Mitsubishi$MKT.Return
+Mitsubishi$Mitsubishi.CAR <- cumsum(Mitsubishi$Mitsubishi.AR)
+
+#Plot Graphs
+Mitsubishi$Mitsubishi.DateNum <- 1:nrow(Mitsubishi) 
+
+plot(Mitsubishi$Mitsubishi.Return)
+
+plot(Mitsubishi$Mitsubishi.CAR)
+plot(Mitsubishi$Mitsubishi.CAR[1:38])
+plot(Mitsubishi$Mitsubishi.CAR[39:88])
+
+Mitsubishi.EP <- Mitsubishi[1:38,] #Creating a subset for the Estimation Period, from 9th May to 29th June
+Mitsubishi.EW<- Mitsubishi[39:88,] #Creating a subset for the Event Window, from 2nd July to 7th September
+
+
 #Secom:
+#Calculating Return
 Secom$Secom.Return <- (Secom$Secom.Close-Secom$Secom.Open)/Secom$Secom.Open
 Secom$RF.Return <- (JPRF$Return)
 Secom$MKT.Return <- (JPMKT$Return)
 
+#Calculating Abnormal Return and Cumulative Abnormal Return
+Secom$Secom.AR <- Secom$Secom.Return-Secom$MKT.Return
+Secom$Secom.CAR <- cumsum(Secom$Secom.AR)
+
+#Plot Graphs
+Secom$Secom.DateNum <- 1:nrow(Secom) 
+
+plot(Secom$Secom.Return)
+
+plot(Secom$Secom.CAR)
+plot(Secom$Secom.CAR[1:38])
+plot(Secom$Secom.CAR[39:88])
+
+Secom.EP <- Secom[1:38,] #Creating a subset for the Estimation Period, from 9th May to 29th June
+Secom.EW<- Secom[39:88,] #Creating a subset for the Event Window, from 2nd July to 7th September
+
+
 #Tokyu Fudosan Holdings Corporation:
+#Calculating Return
 Tokyu$Tokyu.Return <- (Tokyu$Tokyu.Close-Tokyu$Tokyu.Open)/Tokyu$Tokyu.Open
 Tokyu$RF.Return <- (JPRF$Return)
 Tokyu$MKT.Return <- (JPMKT$Return)
 
 #Calculating Abnormal Return and Cumulative Abnormal Return
-
-#Amada:
-Amada$Amada.AR <- Amada$Amada.Return-Amada$MKT.Return
-Amada$Amada.CAR <- cumsum(Amada$Amada.AR)
-
-#Hokuetsu Corporation:
-Hokuetsu$Hokuetsu.AR <- Hokuetsu$Hokuetsu.Return-Hokuetsu$MKT.Return
-Hokuetsu$Hokuetsu.CAR <- cumsum(Hokuetsu$Hokuetsu.AR)
-
-#Mitsubishi Motors:
-Mitsubishi$Mitsubishi.AR <- Mitsubishi$Mitsubishi.Return-Mitsubishi$MKT.Return
-Mitsubishi$Mitsubishi.CAR <- cumsum(Mitsubishi$Mitsubishi.AR)
-
-#Secom:
-Secom$Secom.AR <- Secom$Secom.Return-Secom$MKT.Return
-Secom$Secom.CAR <- cumsum(Secom$Secom.AR)
-
-#Tokyu Fudosan Holdings Corporation:
 Tokyu$Tokyu.AR <- Tokyu$Tokyu.Return-Tokyu$MKT.Return
 Tokyu$Tokyu.CAR <- cumsum(Tokyu$Tokyu.AR)
 
+#Plot Graphs
+Tokyu$STokyu.DateNum <- 1:nrow(Secom) 
 
+plot(Tokyu$Tokyu.Return)
+
+plot(Tokyu$Tokyu.CAR)
+plot(Tokyu$Tokyu.CAR[1:38])
+plot(Tokyu$Tokyu.CAR[39:88])
+
+Tokyu.EP <- Tokyu[1:38,] #Creating a subset for the Estimation Period, from 9th May to 29th June
+Tokyu.EW<- Tokyu[39:88,] #Creating a subset for the Event Window, from 2nd July to 7th September
+
+
+
+#STILL NEED TO FIGURE
 
 # Plot CAR
 Amada$Amada.DateNum <- 1:nrow(Amada) 
