@@ -5,13 +5,13 @@ if (!require("quantmod")) {
   library(quantmod)
 }
 
-start <- as.Date("2018-05-09")
-end <- as.Date("2018-09-09")
+startJP <- as.Date("2018-05-09")
+endJP <- as.Date("2018-09-09")
 
 #Amada:
 
 symbolBasket1 <- c('6113.T') #Amada Holdings Co. 
-getSymbols(symbolBasket1 , src='yahoo', from = start, to = end)
+getSymbols(symbolBasket1 , src='yahoo', from = startJP, to = endJP)
 summary('6113.T')
 
 Amada <- as.xts(`6113.T`)
@@ -23,7 +23,7 @@ View(Amada)
 #Hokuetsu Corporation:
 
 symbolBasket2 <- c('3865.T') #Hokuetsu Corporation. 
-getSymbols(symbolBasket2 , src='yahoo', from = start, to = end)
+getSymbols(symbolBasket2 , src='yahoo', from = startJP, to = endJP)
 summary('3865.T')
 
 Hokuetsu <- as.xts(`3865.T`)
@@ -35,7 +35,7 @@ View(Hokuetsu)
 #Mitsubishi Motors:
 
 symbolBasket3 <- c('7211.T') #Mitsubishi Motors 
-getSymbols(symbolBasket3 , src='yahoo', from = start, to = end)
+getSymbols(symbolBasket3 , src='yahoo', from = startJP, to = endJP)
 summary('7211.T')
 
 Mitsubishi <- as.xts(`7211.T`)
@@ -47,7 +47,7 @@ View(Mitsubishi)
 #Secom:
 
 symbolBasket4 <- c('9735.T') #Secom 
-getSymbols(symbolBasket4 , src='yahoo', from = start, to = end)
+getSymbols(symbolBasket4 , src='yahoo', from = startJP, to = endJP)
 summary('9735.T')
 
 Secom <- as.xts(`9735.T`)
@@ -59,7 +59,7 @@ View(Secom)
 #Tokyu Fudosan Holdings Corporation:
 
 symbolBasket5 <- c('3289.T') #Tokyu 
-getSymbols(symbolBasket5 , src='yahoo', from = start, to = end)
+getSymbols(symbolBasket5 , src='yahoo', from = startJP, to = endJP)
 summary('3289.T')
 
 Tokyu <- as.xts(`3289.T`)
