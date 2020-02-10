@@ -9,7 +9,6 @@ startJP <- as.Date("2018-05-09")
 endJP <- as.Date("2018-09-09")
 
 #Amada:
-
 symbolBasket1 <- c('6113.T') #Amada Holdings Co. 
 getSymbols(symbolBasket1 , src='yahoo', from = startJP, to = endJP)
 summary('6113.T')
@@ -21,7 +20,6 @@ names(Amada)
 View(Amada)
 
 #Hokuetsu Corporation:
-
 symbolBasket2 <- c('3865.T') #Hokuetsu Corporation. 
 getSymbols(symbolBasket2 , src='yahoo', from = startJP, to = endJP)
 summary('3865.T')
@@ -33,7 +31,6 @@ names(Hokuetsu)
 View(Hokuetsu)
 
 #Mitsubishi Motors:
-
 symbolBasket3 <- c('7211.T') #Mitsubishi Motors 
 getSymbols(symbolBasket3 , src='yahoo', from = startJP, to = endJP)
 summary('7211.T')
@@ -45,7 +42,6 @@ names(Mitsubishi)
 View(Mitsubishi)
 
 #Secom:
-
 symbolBasket4 <- c('9735.T') #Secom 
 getSymbols(symbolBasket4 , src='yahoo', from = startJP, to = endJP)
 summary('9735.T')
@@ -57,7 +53,6 @@ names(Secom)
 View(Secom)
 
 #Tokyu Fudosan Holdings Corporation:
-
 symbolBasket5 <- c('3289.T') #Tokyu 
 getSymbols(symbolBasket5 , src='yahoo', from = startJP, to = endJP)
 summary('3289.T')
@@ -72,11 +67,8 @@ View(Tokyu)
 #2. Calculations
 
 #Market Data
-
-JPRF <- read.csv("JP RF.csv")
 JPMKT <- read.csv("JP MKT.csv")
 
-JPRF$Return <- (JPRF$Close-JPRF$Open)/JPRF$Open
 JPMKT$Return <- (JPMKT$Close-JPMKT$Open)/JPMKT$Open
 
 #Stock Data
@@ -84,7 +76,6 @@ JPMKT$Return <- (JPMKT$Close-JPMKT$Open)/JPMKT$Open
 #Amada:
 #Calculating Return
 Amada$Amada.Return <- (Amada$Amada.Close-Amada$Amada.Open)/Amada$Amada.Open
-Amada$RF.Return <- (JPRF$Return)
 Amada$MKT.Return <- (JPMKT$Return)
 
 #Calculating Abnormal Return and Cumulative Abnormal Return
@@ -107,7 +98,6 @@ Amada.EW<- Amada[39:88,] #Creating a subset for the Event Window, from 2nd July 
 #Hokuetsu Corporation:
 #Calculating Return
 Hokuetsu$Hokuetsu.Return <- (Hokuetsu$Hokuetsu.Close-Hokuetsu$Hokuetsu.Open)/Hokuetsu$Hokuetsu.Open
-Hokuetsu$RF.Return <- (JPRF$Return)
 Hokuetsu$MKT.Return <- (JPMKT$Return)
 
 #Calculating Abnormal Return and Cumulative Abnormal Return
@@ -130,7 +120,6 @@ Hokuetsu.EW<- Hokuetsu[39:88,] #Creating a subset for the Event Window, from 2nd
 #Mitsubishi Motors:
 #Calculating Return
 Mitsubishi$Mitsubishi.Return <- (Mitsubishi$Mitsubishi.Close-Mitsubishi$Mitsubishi.Open)/Mitsubishi$Mitsubishi.Open
-Mitsubishi$RF.Return <- (JPRF$Return)
 Mitsubishi$MKT.Return <- (JPMKT$Return)
 
 #Calculating Abnormal Return and Cumulative Abnormal Return
@@ -153,7 +142,6 @@ Mitsubishi.EW<- Mitsubishi[39:88,] #Creating a subset for the Event Window, from
 #Secom:
 #Calculating Return
 Secom$Secom.Return <- (Secom$Secom.Close-Secom$Secom.Open)/Secom$Secom.Open
-Secom$RF.Return <- (JPRF$Return)
 Secom$MKT.Return <- (JPMKT$Return)
 
 #Calculating Abnormal Return and Cumulative Abnormal Return
@@ -176,7 +164,6 @@ Secom.EW<- Secom[39:88,] #Creating a subset for the Event Window, from 2nd July 
 #Tokyu Fudosan Holdings Corporation:
 #Calculating Return
 Tokyu$Tokyu.Return <- (Tokyu$Tokyu.Close-Tokyu$Tokyu.Open)/Tokyu$Tokyu.Open
-Tokyu$RF.Return <- (JPRF$Return)
 Tokyu$MKT.Return <- (JPMKT$Return)
 
 #Calculating Abnormal Return and Cumulative Abnormal Return
