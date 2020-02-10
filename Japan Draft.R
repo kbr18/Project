@@ -86,6 +86,7 @@ Amada$Amada.CAR <- cumsum(Amada$Amada.AR)
 Amada$Amada.DateNum <- 1:nrow(Amada) 
 
 plot(Amada$Amada.Return)
+hist(Amada$Amada.Return)
 
 plot(Amada$Amada.CAR)
 plot(Amada$Amada.CAR[1:38])
@@ -108,6 +109,7 @@ Hokuetsu$Hokuetsu.CAR <- cumsum(Hokuetsu$Hokuetsu.AR)
 Hokuetsu$Hokuetsu.DateNum <- 1:nrow(Hokuetsu) 
 
 plot(Hokuetsu$Hokuetsu.Return)
+hist(Hokuetsu$Hokuetsu.Return)
 
 plot(Hokuetsu$Hokuetsu.CAR)
 plot(Hokuetsu$Hokuetsu.CAR[1:38])
@@ -130,6 +132,7 @@ Mitsubishi$Mitsubishi.CAR <- cumsum(Mitsubishi$Mitsubishi.AR)
 Mitsubishi$Mitsubishi.DateNum <- 1:nrow(Mitsubishi) 
 
 plot(Mitsubishi$Mitsubishi.Return)
+hist(Mitsubishi$Mitsubishi.Return)
 
 plot(Mitsubishi$Mitsubishi.CAR)
 plot(Mitsubishi$Mitsubishi.CAR[1:38])
@@ -152,6 +155,7 @@ Secom$Secom.CAR <- cumsum(Secom$Secom.AR)
 Secom$Secom.DateNum <- 1:nrow(Secom) 
 
 plot(Secom$Secom.Return)
+hist(Secom$Secom.Return)
 
 plot(Secom$Secom.CAR)
 plot(Secom$Secom.CAR[1:38])
@@ -174,6 +178,7 @@ Tokyu$Tokyu.CAR <- cumsum(Tokyu$Tokyu.AR)
 Tokyu$STokyu.DateNum <- 1:nrow(Secom) 
 
 plot(Tokyu$Tokyu.Return)
+hist(Tokyu$Tokyu.Return)
 
 plot(Tokyu$Tokyu.CAR)
 plot(Tokyu$Tokyu.CAR[1:38])
@@ -185,18 +190,6 @@ Tokyu.EW<- Tokyu[39:88,] #Creating a subset for the Event Window, from 2nd July 
 
 
 #STILL NEED TO FIGURE
-
-# Plot CAR
-Amada$Amada.DateNum <- 1:nrow(Amada) 
-
-plot(Amada$Amada.CAR)
-
-plot(Amada$Amada.Return)
-Amada.EP <- Amada[1:38,] #Creating a subset from the risk-free data, i.e. our Estimation Period, from 9th May to 29th June
-Amada.EW<- Amada[39:88,] #Creating a subset from the risk-free data, i.e. our Event Window, from 2nd July to 7th September
-
-plot(Amada$Amada.CAR[1:38])
-plot(Amada$Amada.CAR[39:88])
 
 logisticRegression=glm(Amada.CAR~Amada$Amada.Open+Amada$Amada.High+Amada$Amada.Low+Amada$Amada.Volume+Amada$Amada.Adjusted+Amada$Amada.Return, data=Amada.CAR,family=binomial)
 

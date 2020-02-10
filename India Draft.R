@@ -86,6 +86,7 @@ Tata$Tata.CAR <- cumsum(Tata$Tata.AR)
 Tata$Tata.DateNum <- 1:nrow(Tata) 
 
 plot(Tata$Tata.Return)
+hist(Tata$Tata.Return)
 
 plot(Tata$Tata.CAR)
 plot(Tata$Tata.CAR[1:38])
@@ -108,6 +109,7 @@ Mahindra$Mahindra.CAR <- cumsum(Mahindra$Mahindra.AR)
 Mahindra$Mahindra.DateNum <- 1:nrow(Mahindra) 
 
 plot(Mahindra$Mahindra.Return)
+hist(Mahindra$Mahindra.Return)
 
 plot(Mahindra$Mahindra.CAR)
 plot(Mahindra$Mahindra.CAR[1:38])
@@ -130,6 +132,7 @@ Bajaj$Bajaj.CAR <- cumsum(Bajaj$Bajaj.AR)
 Bajaj$Bajaj.DateNum <- 1:nrow(Bajaj) 
 
 plot(Bajaj$Bajaj.Return)
+hist(Bajaj$Bajaj.Return)
 
 plot(Bajaj$Bajaj.CAR)
 plot(Bajaj$Bajaj.CAR[1:38])
@@ -152,6 +155,7 @@ ICICI$ICICI.CAR <- cumsum(ICICI$ICICI.AR)
 ICICI$ICICI.DateNum <- 1:nrow(ICICI) 
 
 plot(ICICI$ICICI.Return)
+hist(ICICI$ICICI.Return)
 
 plot(ICICI$ICICI.CAR)
 plot(ICICI$ICICI.CAR[1:38])
@@ -174,6 +178,7 @@ LT$LT.CAR <- cumsum(LT$LT.AR)
 LT$LT.DateNum <- 1:nrow(LT) 
 
 plot(LT$LT.Return)
+hist(LT$LT.Return)
 
 plot(LT$LT.CAR)
 plot(LT$LT.CAR[1:38])
