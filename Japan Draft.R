@@ -69,7 +69,6 @@ names(Tokyu)
 View(Tokyu)
 
 
-
 #2. Calculations
 
 #Market Data
