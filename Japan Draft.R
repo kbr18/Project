@@ -287,6 +287,15 @@ lines(xv,yv, col="green")
 #Tree
 #WORKING ON TREE BELOW
 
+#Linear regression and logistic regression models fail in situations where the 
+#relationship between features and outcome is nonlinear or where features interact 
+#with each other. Time to shine for the decision tree! Tree based models split the data
+#multiple times according to certain cutoff values in the features. Through splitting, 
+#different subsets of the dataset are created, with each instance belonging to one subset. 
+#The final subsets are called terminal or leaf nodes and the intermediate subsets are called 
+#internal nodes or split nodes. To predict the outcome in each leaf node, the average outcome 
+#of the training data in this node is used
+
 #Regression trees
 #Linear regression specifies an explicit model, which is linear in coef-
 #ficients, for the regression function. It works well when the model is
@@ -302,6 +311,21 @@ lines(xv,yv, col="green")
 #bootstrap aggregating (bagging) regression trees, this technique can become 
 #quite powerful and effective
 
+
+ADVANTAGES:
+  
+#The tree structure is ideal for capturing interactions between features 
+  #in the data.
+
+#The data ends up in distinct groups that are often easier to understand 
+#than points on a multi-dimensional hyperplane as in linear regression. The 
+#interpretation is arguably pretty simple. The tree structure also has a 
+#natural visualization, with its nodes and edges.
+
+  
+  
+  
+  
 install.packages("tree")
 install.packages("ISLR")
 library(tree)
@@ -370,37 +394,4 @@ pred <- predict(optimal_tree, newdata = Amada_test)
 RMSE(pred = pred, obs = Amada_test$Amada.CAR)
 
 #The final RMSE is 0.01316045 which suggests that, on average, our predicted CAR is about 0.01316045 off from the actual CAR.
-
-#ANOTHER ANOTHER TREE????
-
-# Grow tree
-fit <- rpart(Amada.CAR~ Amada.Open + Amada.High + Amada.Low + Amada.Close + Amada.Volume + Amada.Adjusted + Amada.Return + MKT.Return + Amada.AR, method="anova", data=Amada)
-
-prp(fit) 
-
-#In regression trees, we  predict the number.
-#That number here is the average of the median CAR in that bucket.
-
-plot(fit)
-text(fit)
-summary(fit)
-
-printcp(fit) # display the results
-plotcp(fit) # visualize cross-validation results
-summary(fit) # detailed summary of splits
-
-# create additional plots
-par(mfrow=c(1,2)) # two plots on one page
-rsq.rpart(fit) # visualize cross-validation results  
-
-# plot tree
-plot(fit, uniform=TRUE, main="Regression Tree for CAR")
-text(fit, use.n=TRUE, all=TRUE, cex=.8)
-
-# prune the tree
-pfit<- prune(fit, cp=0.01160389) # from cptable   
-
-# plot the pruned tree
-plot(pfit, uniform=TRUE, main="Pruned Regression Tree for CAR")
-text(pfit, use.n=TRUE, all=TRUE, cex=.8)
 
