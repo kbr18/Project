@@ -236,32 +236,80 @@ mean((medv.predict-medv.test)^2)
 #The mean squares of predictive errors is 0.00027096 for the testing sample,
 #which is greater than 0.0001682 for the training sample.
 
+prune.tree(tree.AmadaCAR, best=4)
+?prune.tree
+
+#ANOTHER REGRESSION?
+
+# Create training (80%) and test (20%) sets for the Amada data.
+# Use set.seed for reproducibility
+
+library(rsample)     # data splitting 
+library(dplyr)       # data wrangling
+library(rpart)       # performing regression trees
+library(rpart.plot)  # plotting regression trees
+library(ipred)       # bagging
+library(caret)       # bagging
+
+set.seed(123)
+Amada_split <- initial_split(Amada, prop = 0.8)
+Amada_train <- training(Amada_split)
+Amada_test  <- testing(Amada_split)
+
+tree1 <- rpart(formula=Amada.CAR ~.,data= Amada_train, method = "anova")
+tree1
+rpart.plot(tree1)
+plotcp(tree1)
+
+tree2 <- rpart(formula=Amada.CAR ~ .,data= Amada_train, method  = "anova", control = list(cp = 0, xval = 10))
+plotcp(tree2)
+abline(v = 12, lty = "dashed")
+
+tree3 <- rpart(formula=Amada.CAR ~ .,data= Amada_train, method  = "anova", control = list(minsplit = 10, maxdepth = 12, xval = 10))
+plotcp(tree3)
+
+optimal_tree <- rpart(formula=Amada.CAR ~ .,data= Amada_train, method  = "anova", control = list(minsplit = 11, maxdepth = 8, cp = 0.01))
+plotcp(optimal_tree)
+
+pred <- predict(optimal_tree, newdata = Amada_test)
+RMSE(pred = pred, obs = Amada_test$Amada.CAR)
+
+#The final RMSE is 0.01316045 which suggests that, on average, our predicted CAR is about 0.01316045 off from the actual CAR.
+
+#ANOTHER ANOTHER TREE????
+
+# Grow tree
+fit <- rpart(Amada.CAR~ Amada.Open + Amada.High + Amada.Low + Amada.Close + Amada.Volume + Amada.Adjusted + Amada.Return + MKT.Return + Amada.AR, method="anova", data=Amada)
+
+prp(fit) 
+
+#In regression trees, we  predict the number.
+#That number here is the average of the median CAR in that bucket.
+
+plot(fit)
+text(fit)
+summary(fit)
+
+printcp(fit) # display the results
+plotcp(fit) # visualize cross-validation results
+summary(fit) # detailed summary of splits
+
+# create additional plots
+par(mfrow=c(1,2)) # two plots on one page
+rsq.rpart(fit) # visualize cross-validation results  
+
+# plot tree
+plot(fit, uniform=TRUE, main="Regression Tree for CAR")
+text(fit, use.n=TRUE, all=TRUE, cex=.8)
+
+# prune the tree
+pfit<- prune(fit, cp=0.01160389) # from cptable   
+
+# plot the pruned tree
+plot(pfit, uniform=TRUE, main="Pruned Regression Tree for CAR")
+text(pfit, use.n=TRUE, all=TRUE, cex=.8)
 
 
-#STILL NEED TO FIGURE
 
-logisticRegression=glm(Amada.CAR~Amada$Amada.Open+Amada$Amada.High+Amada$Amada.Low+Amada$Amada.Volume+Amada$Amada.Adjusted+Amada$Amada.Return, data=Amada.CAR,family=binomial)
 
-Regression <- glm(Amada.CAR ~ MRP, data=Amada.CAR[1:38])
-
-summary(Amada$Amada.CAR)
-
-#Tree
-
-install.packages("tree")
-install.packages("ISLR")
-library(tree)
-library(ISLR)
-
-High=ifelse(Amada$Amada.Return<=0.004384, "No", "Yes")
-Amada2=data.frame(Amada, High)
-tree.Amada=tree(High~.-Amada$Amada.Return, Amada2)
-summary(tree.Amada)
-
-Event=ifelse(Amada.CAR<-0.10, "Yes", "No")
-Amada2=data.frame(Amada, Event)
-tree.Amada=tree(Event~.-Amada.CAR, Amada2)
-summary(tree.Amada)
-
-plot(Amada.CAR[39:50])
 
