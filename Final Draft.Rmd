@@ -1,10 +1,3 @@
----
-title: "Final Draft"
-author: "Jahnvi Jhaveri"
-date: "12/02/2020"
-output: html_document
----
-
 Part 1: Installing Packages
 
 ```{r eval=FALSE, include=TRUE}
@@ -24,7 +17,6 @@ getSymbols(symbolBasketJP , src='yahoo', from = startJP, to = endJP)
 
 Amada <- as.xts(`6113.T`)
 names(Amada) <- c("Amada.Open"   ,  "Amada.High"   ,  "Amada.Low"   ,   "Amada.Close"  , "Amada.Volume",  "Amada.Adjusted")
-View(Amada)
 
 Hokuetsu <- as.xts(`3865.T`)
 names(Hokuetsu) <- c("Hokuetsu.Open"   ,  "Hokuetsu.High"   ,  "Hokuetsu.Low"   ,   "Hokuetsu.Close"  ,  "Hokuetsu.Volume",  "Hokuetsu.Adjusted")
@@ -47,7 +39,7 @@ endIN <- as.Date("2018-10-18")
 
 symbolBasketIN <- c("TATASTEEL.BO", "TECHM.BO", "BAJAJ-AUTO.BO", "ICICIBANK.BO", "LT.BO")
 
-getSymbols(symbolBasketJP , src='yahoo', from = startJP, to = endJP)
+getSymbols(symbolBasketIN, src='yahoo', from = startJP, to = endJP)
 
 Tata <- as.xts(`TATASTEEL.BO`)
 names(Tata) <- c("Tata.Open"   ,  "Tata.High"   ,  "Tata.Low"   ,   "Tata.Close"  ,  "Tata.Volume",  "Tata.Adjusted")
@@ -65,6 +57,272 @@ LT <- as.xts(`LT.BO`)
 names(LT) <- c("LT.Open"   ,  "LT.High"   ,  "LT.Low"   ,   "LT.Close"  ,  "LT.Volume",  "LT.Adjusted")
 ```
 
+Estimation Period: From 9th May to 29th June
+Event Window: From 2nd July to 7th September
 
+Part 4: Market data and risk-free
 
+```{r eval=FALSE, include=TRUE}
+JPMKT <- read.csv("JP MKT.csv")
+JPRF <- read.csv("JP RF.csv")
 
+JPMKT$Return <- (JPMKT$Close-JPMKT$Open)/JPMKT$Open
+JPRF$Return <- (JPRF$Close-JPRF$Open)/JPRF$Open
+
+INMKT <- read.csv("IN MKT.csv")
+INRF <- read.csv("IN RF.csv")
+
+INMKT$Return <- (INMKT$Close-INMKT$Open)/INMKT$Open
+INRF$Return <- (INRF$Close-INRF$Open)/INRF$Open
+
+JPMKT.EP<- JPMKT[1:38,] #Creating a subset for our Estimation Period
+JPMKT.EW<- JPMKT[39:88,] #Creating a subset for our Event Window
+
+JPRF.EP<- JPRF[1:38,] #Creating a subset for our Estimation Period
+JPRF.EW<- JPRF[39:88,] #Creating a subset for our Event Window
+```
+
+Part 5: Cumulative Abnormal Return (CAR) Calculations for Japanese Stocks
+
+Sub-part a: Amada CAR
+```{r eval=FALSE, include=TRUE}
+Amada.EP <- Amada[1:38,] #Creating a subset for our Estimation Period
+Amada.EW<- Amada[39:88,] #Creating a subset for our Event Window
+
+#Use the Estimation Period to calculate alpha and beta 
+Amada.EP$Amada.MRP <- JPMKT.EP$Return - JPRF.EP$Return #Market Risk Premium
+Amada.EP$Amada.SRP <- Amada.EP$Amada.Return - JPRF.EP$Return #Stock Risk Premium
+
+r1<- glm(Amada.EP$Amada.SRP~ Amada.EP$Amada.MRP) 
+summary(r1)
+
+alpha <- -0.003608 #(p value=0.00333, thus significant at the 1% level)
+beta <- 0.977012
+
+#Calculate the Abnormal Revenue in the Event Window 
+Amada.EW$Amada.AR <- Amada.EW$Amada.Return - (JPRF.EW$Return -0.003608 + 0.977012*(JPMKT.EW$Return - JPRF.EW$Return))
+Amada.CAR <- cumsum(Amada.EW$Amada.AR)
+
+#Plot CAR 
+Amada.EW$Amada.DateNum <- 1:nrow(Amada.EW)
+plot(Amada.CAR)
+```
+
+Sub-part b: Hokuetsu CAR
+```{r eval=FALSE, include=TRUE}
+Hokuetsu.EP <- Hokuetsu[1:38,] #Creating a subset for our Estimation Period
+Hokuetsu.EW<- Hokuetsu[39:88,] #Creating a subset for our Event Window
+
+#Use the Estimation Period to calculate alpha and beta 
+Hokuetsu.EP$Hokuetsu.MRP <- JPMKT.EP$Return - JPRF.EP$Return #Market Risk Premium
+Hokuetsu.EP$Hokuetsu.SRP <- Hokuetsu.EP$Hokuetsu.Return - JPRF.EP$Return #Stock Risk Premium
+
+r1<- glm(Hokuetsu.EP$Hokuetsu.SRP~ Hokuetsu.EP$Hokuetsu.MRP) 
+summary(r1)
+
+alpha <- ___ #(p value=___, thus significant at the 1% level)
+beta <- ___
+
+#Calculate the Abnormal Revenue in the Event Window 
+Hokuetsu.EW$Hokuetsu.AR <- Hokuetsu.EW$Hokuetsu.Return - (JPRF.EW$Return - alpha + beta*(JPMKT.EW$Return - JPRF.EW$Return))
+Hokuetsu.CAR <- cumsum(Hokuetsu.EW$Hokuetsu.AR)
+
+#Plot CAR 
+Hokuetsu.EW$Hokuetsu.DateNum <- 1:nrow(Hokuetsu.EW)
+plot(Hokuetsu.CAR)
+```
+
+Sub-part c: Mitsubishi CAR
+```{r eval=FALSE, include=TRUE}
+Mitsubishi.EP <- Mitsubishi[1:38,] #Creating a subset for our Estimation Period
+Mitsubishi.EW<- Mitsubishi[39:88,] #Creating a subset for our Event Window
+
+#Use the Estimation Period to calculate alpha and beta 
+Mitsubishi.EP$Mitsubishi.MRP <- JPMKT.EP$Return - JPRF.EP$Return #Market Risk Premium
+Mitsubishi.EP$Mitsubishi.SRP <- Mitsubishi.EP$Mitsubishi.Return - JPRF.EP$Return #Stock Risk Premium
+
+r1<- glm(Mitsubishi.EP$Mitsubishi.SRP~ Mitsubishi.EP$Mitsubishi.MRP) 
+summary(r1)
+
+alpha <- ___ #(p value=___, thus significant at the 1% level)
+beta <- ___
+
+#Calculate the Abnormal Revenue in the Event Window 
+Mitsubishi.EW$Mitsubishi.AR <- Mitsubishi.EW$Mitsubishi.Return - (JPRF.EW$Return - alpha + beta*(JPMKT.EW$Return - JPRF.EW$Return))
+Mitsubishi.CAR <- cumsum(Mitsubishi.EW$Mitsubishi.AR)
+
+#Plot CAR 
+Mitsubishi.EW$Mitsubishi.DateNum <- 1:nrow(Mitsubishi.EW)
+plot(Mitsubishi.CAR)
+```
+
+Sub-part d: Secom CAR
+```{r eval=FALSE, include=TRUE}
+Secom.EP <- Secom[1:38,] #Creating a subset for our Estimation Period
+Secom.EW<- Secom[39:88,] #Creating a subset for our Event Window
+
+#Use the Estimation Period to calculate alpha and beta 
+Secom.EP$Secom.MRP <- JPMKT.EP$Return - JPRF.EP$Return #Market Risk Premium
+Secom.EP$Secom.SRP <- Secom.EP$Secom.Return - JPRF.EP$Return #Stock Risk Premium
+
+r1<- glm(Secom.EP$Secom.SRP~ Secom.EP$Secom.MRP) 
+summary(r1)
+
+alpha <- ___ #(p value=___, thus significant at the 1% level)
+beta <- ___
+
+#Calculate the Abnormal Revenue in the Event Window 
+Secom.EW$Secom.AR <- Secom.EW$Secom.Return - (JPRF.EW$Return - alpha + beta*(JPMKT.EW$Return - JPRF.EW$Return))
+Secom.CAR <- cumsum(Secom.EW$Secom.AR)
+
+#Plot CAR 
+Secom.EW$Secom.DateNum <- 1:nrow(Secom.EW)
+plot(Secom.CAR)
+```
+
+Sub-part e: Tokyu CAR
+```{r eval=FALSE, include=TRUE}
+Tokyu.EP <- Tokyu[1:38,] #Creating a subset for our Estimation Period
+Tokyu.EW<- Tokyu[39:88,] #Creating a subset for our Event Window
+
+#Use the Estimation Period to calculate alpha and beta 
+Tokyu.EP$Tokyu.MRP <- JPMKT.EP$Return - JPRF.EP$Return #Market Risk Premium
+Tokyu.EP$Tokyu.SRP <- Tokyu.EP$Tokyu.Return - JPRF.EP$Return #Stock Risk Premium
+
+r1<- glm(Tokyu.EP$Tokyu.SRP~ Tokyu.EP$Tokyu.MRP) 
+summary(r1)
+
+alpha <- ___ #(p value=___, thus significant at the 1% level)
+beta <- ___
+
+#Calculate the Abnormal Revenue in the Event Window 
+Tokyu.EW$Tokyu.AR <- Tokyu.EW$Tokyu.Return - (JPRF.EW$Return - alpha + beta*(JPMKT.EW$Return - JPRF.EW$Return))
+Tokyu.CAR <- cumsum(Tokyu.EW$Tokyu.AR)
+
+#Plot CAR 
+Tokyu.EW$Tokyu.DateNum <- 1:nrow(Tokyu.EW)
+plot(Tokyu.CAR)
+```
+
+Part 6: Cumulative Abnormal Return (CAR) Calculations for Indian Stocks
+Sub-part a: Tata CAR
+```{r eval=FALSE, include=TRUE}
+Tata.EP <- Tata[1:38,] #Creating a subset for our Estimation Period
+Tata.EW<- Tata[39:88,] #Creating a subset for our Event Window
+
+#Use the Estimation Period to calculate alpha and beta 
+Tata.EP$Tata.MRP <- INMKT.EP$Return - INRF.EP$Return #Market Risk Premium
+Tata.EP$Tata.SRP <- Tata.EP$Tata.Return - INRF.EP$Return #Stock Risk Premium
+
+r1<- glm(Tata.EP$Tata.SRP~ Tata.EP$Tata.MRP) 
+summary(r1)
+
+alpha <- ___ #(p value=___, thus significant at the 1% level)
+beta <- ___
+
+#Calculate the Abnormal Revenue in the Event Window 
+Tata.EW$Tata.AR <- Tata.EW$Tata.Return - (JPRF.EW$Return - alpha + beta*(JPMKT.EW$Return - JPRF.EW$Return))
+Tata.CAR <- cumsum(Tata.EW$Tata.AR)
+
+#Plot CAR 
+Tata.EW$Tata.DateNum <- 1:nrow(Tata.EW)
+plot(Tata.CAR)
+```
+
+Sub-part b: Mahindra CAR
+```{r eval=FALSE, include=TRUE}
+Mahindra.EP <- Mahindra[1:38,] #Creating a subset for our Estimation Period
+Mahindra.EW<- Mahindra[39:88,] #Creating a subset for our Event Window
+
+#Use the Estimation Period to calculate alpha and beta 
+Mahindra.EP$Mahindra.MRP <- INMKT.EP$Return - INRF.EP$Return #Market Risk Premium
+Mahindra.EP$Mahindra.SRP <- Mahindra.EP$Mahindra.Return - INRF.EP$Return #Stock Risk Premium
+
+r1<- glm(Mahindra.EP$Mahindra.SRP~ Mahindra.EP$Mahindra.MRP) 
+summary(r1)
+
+alpha <- ___ #(p value=___, thus significant at the 1% level)
+beta <- ___
+
+#Calculate the Abnormal Revenue in the Event Window 
+Mahindra.EW$Mahindra.AR <- Mahindra.EW$Mahindra.Return - (JPRF.EW$Return - alpha + beta*(JPMKT.EW$Return - JPRF.EW$Return))
+Mahindra.CAR <- cumsum(Mahindra.EW$Mahindra.AR)
+
+#Plot CAR 
+Mahindra.EW$Mahindra.DateNum <- 1:nrow(Mahindra.EW)
+plot(Mahindra.CAR)
+```
+
+Sub-part c: Bajaj CAR
+```{r eval=FALSE, include=TRUE}
+Bajaj.EP <- Bajaj[1:38,] #Creating a subset for our Estimation Period
+Bajaj.EW<- Bajaj[39:88,] #Creating a subset for our Event Window
+
+#Use the Estimation Period to calculate alpha and beta 
+Bajaj.EP$Bajaj.MRP <- INMKT.EP$Return - INRF.EP$Return #Market Risk Premium
+Bajaj.EP$Bajaj.SRP <- Bajaj.EP$Bajaj.Return - INRF.EP$Return #Stock Risk Premium
+
+r1<- glm(Bajaj.EP$Bajaj.SRP~ Bajaj.EP$Bajaj.MRP) 
+summary(r1)
+
+alpha <- ___ #(p value=___, thus significant at the 1% level)
+beta <- ___
+
+#Calculate the Abnormal Revenue in the Event Window 
+Bajaj.EW$Bajaj.AR <- Bajaj.EW$Bajaj.Return - (JPRF.EW$Return - alpha + beta*(JPMKT.EW$Return - JPRF.EW$Return))
+Bajaj.CAR <- cumsum(Bajaj.EW$Bajaj.AR)
+
+#Plot CAR 
+Bajaj.EW$Bajaj.DateNum <- 1:nrow(Bajaj.EW)
+plot(Bajaj.CAR)
+```
+
+Sub-part d: ICICI CAR
+```{r eval=FALSE, include=TRUE}
+ICICI.EP <- ICICI[1:38,] #Creating a subset for our Estimation Period
+ICICI.EW<- ICICI[39:88,] #Creating a subset for our Event Window
+
+#Use the Estimation Period to calculate alpha and beta 
+ICICI.EP$ICICI.MRP <- INMKT.EP$Return - INRF.EP$Return #Market Risk Premium
+ICICI.EP$ICICI.SRP <- ICICI.EP$ICICI.Return - INRF.EP$Return #Stock Risk Premium
+
+r1<- glm(ICICI.EP$ICICI.SRP~ ICICI.EP$ICICI.MRP) 
+summary(r1)
+
+alpha <- ___ #(p value=___, thus significant at the 1% level)
+beta <- ___
+
+#Calculate the Abnormal Revenue in the Event Window 
+ICICI.EW$ICICI.AR <- ICICI.EW$ICICI.Return - (JPRF.EW$Return - alpha + beta*(JPMKT.EW$Return - JPRF.EW$Return))
+ICICI.CAR <- cumsum(ICICI.EW$ICICI.AR)
+
+#Plot CAR 
+ICICI.EW$ICICI.DateNum <- 1:nrow(ICICI.EW)
+plot(ICICI.CAR)
+```
+
+Sub-part e: LT CAR
+```{r eval=FALSE, include=TRUE}
+LT.EP <- LT[1:38,] #Creating a subset for our Estimation Period
+LT.EW<- LT[39:88,] #Creating a subset for our Event Window
+
+#Use the Estimation Period to calculate alpha and beta 
+LT.EP$LT.MRP <- INMKT.EP$Return - INRF.EP$Return #Market Risk Premium
+LT.EP$LT.SRP <- LT.EP$LT.Return - INRF.EP$Return #Stock Risk Premium
+
+r1<- glm(LT.EP$LT.SRP~ LT.EP$LT.MRP) 
+summary(r1)
+
+alpha <- ___ #(p value=___, thus significant at the 1% level)
+beta <- ___
+
+#Calculate the Abnormal Revenue in the Event Window 
+LT.EW$LT.AR <- LT.EW$LT.Return - (JPRF.EW$Return - alpha + beta*(JPMKT.EW$Return - JPRF.EW$Return))
+LT.CAR <- cumsum(LT.EW$LT.AR)
+
+#Plot CAR 
+LT.EW$LT.DateNum <- 1:nrow(LT.EW)
+plot(LT.CAR)
+```
+
+Part 7: Regression Trees 
