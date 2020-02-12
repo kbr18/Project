@@ -189,6 +189,54 @@ Tokyu.EW<- Tokyu[39:88,] #Creating a subset for the Event Window, from 2nd July 
 
 
 
+#Tree
+#WORKING ON TREE BELOW
+
+#Regression trees
+#Linear regression specifies an explicit model, which is linear in coef-
+#ficients, for the regression function. It works well when the model is
+#about correct. When the true function is highly nonlinear, a tree model 
+#may provide a valid alternative.
+
+#build a tree for predicting a continuous variable, a method called 
+#regression analysis
+
+#Basic regression trees partition a data set into smaller groups and then 
+#fit a simple model (constant) for each subgroup. Unfortunately, a single 
+#tree model tends to be highly unstable and a poor predictor. However, by 
+#bootstrap aggregating (bagging) regression trees, this technique can become 
+#quite powerful and effective
+
+install.packages("tree")
+install.packages("ISLR")
+library(tree)
+library(ISLR)
+# Load CART packages
+library(rpart)
+# install rpart package
+install.packages("rpart.plot")
+library(rpart.plot)
+
+#Chapter 4 tree code
+
+library(MASS); library(tree)
+train=sample(1:nrow(Amada), 70)
+dim(Amada)
+tree.AmadaCAR=tree(Amada.CAR~., data=Amada, subset=train)
+summary(tree.AmadaCAR)
+plot(tree.AmadaCAR, col="blue")
+text(tree.AmadaCAR, pretty=0)
+#Mean RSS for the training data is 0.000186
+
+medv.test=Amada[-train, "Amada.CAR"]
+medv.predict=predict(tree.AmadaCAR, newdata=Amada[-train,])
+mean((medv.predict-medv.test)^2)
+
+#The mean squares of predictive errors is 0.0003025119 for the testing sample,
+#which is greater than 0.000186 for the training sample.
+
+
+
 #STILL NEED TO FIGURE
 
 logisticRegression=glm(Amada.CAR~Amada$Amada.Open+Amada$Amada.High+Amada$Amada.Low+Amada$Amada.Volume+Amada$Amada.Adjusted+Amada$Amada.Return, data=Amada.CAR,family=binomial)
