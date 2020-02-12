@@ -222,18 +222,19 @@ library(rpart.plot)
 library(MASS); library(tree)
 train=sample(1:nrow(Amada), 70)
 dim(Amada)
+names(Amada)
 tree.AmadaCAR=tree(Amada.CAR~., data=Amada, subset=train)
 summary(tree.AmadaCAR)
 plot(tree.AmadaCAR, col="blue")
 text(tree.AmadaCAR, pretty=0)
-#Mean RSS for the training data is 0.000186
+#Mean RSS for the training data is 0.0001682
 
 medv.test=Amada[-train, "Amada.CAR"]
 medv.predict=predict(tree.AmadaCAR, newdata=Amada[-train,])
 mean((medv.predict-medv.test)^2)
 
-#The mean squares of predictive errors is 0.0003025119 for the testing sample,
-#which is greater than 0.000186 for the training sample.
+#The mean squares of predictive errors is 0.00027096 for the testing sample,
+#which is greater than 0.0001682 for the training sample.
 
 
 
