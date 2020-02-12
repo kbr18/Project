@@ -395,36 +395,3 @@ RMSE(pred = pred, obs = Amada_test$Amada.CAR)
 
 #The final RMSE is 0.01316045 which suggests that, on average, our predicted CAR is about 0.01316045 off from the actual CAR.
 
-#ANOTHER ANOTHER TREE????
-
-# Grow tree
-fit <- rpart(Amada.CAR~ Amada.Open + Amada.High + Amada.Low + Amada.Close + Amada.Volume + Amada.Adjusted + Amada.Return + MKT.Return + Amada.AR, method="anova", data=Amada)
-
-prp(fit) 
-
-#In regression trees, we  predict the number.
-#That number here is the average of the median CAR in that bucket.
-
-plot(fit)
-text(fit)
-summary(fit)
-
-printcp(fit) # display the results
-plotcp(fit) # visualize cross-validation results
-summary(fit) # detailed summary of splits
-
-# create additional plots
-par(mfrow=c(1,2)) # two plots on one page
-rsq.rpart(fit) # visualize cross-validation results  
-
-# plot tree
-plot(fit, uniform=TRUE, main="Regression Tree for CAR")
-text(fit, use.n=TRUE, all=TRUE, cex=.8)
-
-# prune the tree
-pfit<- prune(fit, cp=0.01160389) # from cptable   
-
-# plot the pruned tree
-plot(pfit, uniform=TRUE, main="Pruned Regression Tree for CAR")
-text(pfit, use.n=TRUE, all=TRUE, cex=.8)
-
