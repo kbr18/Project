@@ -311,6 +311,21 @@ lines(xv,yv, col="green")
 #bootstrap aggregating (bagging) regression trees, this technique can become 
 #quite powerful and effective
 
+
+ADVANTAGES:
+  
+#The tree structure is ideal for capturing interactions between features 
+  #in the data.
+
+#The data ends up in distinct groups that are often easier to understand 
+#than points on a multi-dimensional hyperplane as in linear regression. The 
+#interpretation is arguably pretty simple. The tree structure also has a 
+#natural visualization, with its nodes and edges.
+
+  
+  
+  
+  
 install.packages("tree")
 install.packages("ISLR")
 library(tree)
