@@ -5,13 +5,16 @@ date: "12/02/2020"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+Part 1: Installing Packages
 
+```{r eval=FALSE, include=TRUE}
 install.packages("quantmod")
 library(quantmod)
+```
 
+Part 2: Retrieving data using Quantmod for Japanese stocks
+
+```{r eval=FALSE, include=TRUE}
 startJP <- as.Date("2018-05-09")
 endJP <- as.Date("2018-09-09")
 
@@ -24,13 +27,44 @@ names(Amada) <- c("Amada.Open"   ,  "Amada.High"   ,  "Amada.Low"   ,   "Amada.C
 View(Amada)
 
 Hokuetsu <- as.xts(`3865.T`)
+names(Hokuetsu) <- c("Hokuetsu.Open"   ,  "Hokuetsu.High"   ,  "Hokuetsu.Low"   ,   "Hokuetsu.Close"  ,  "Hokuetsu.Volume",  "Hokuetsu.Adjusted")
 
-for(symbolBasket in symbolBasket){
-  stockData <- getSymbols(Symbols = i, 
-                      src = "yahoo", 
-                      from = startJP,
-                      to = endJP
-                      auto.assign = FALSE)
-}
+Mitsubishi <- as.xts(`7211.T`)
+names(Mitsubishi) <- c("Mitsubishi.Open"   ,  "Mitsubishi.High"   ,  "Mitsubishi.Low"   ,   "Mitsubishi.Close"  ,  "Mitsubishi.Volume",  "Mitsubishi.Adjusted")
+
+Secom <- as.xts(`9735.T`)
+names(Secom) <- c("Secom.Open"   ,  "Secom.High"   ,  "Secom.Low"   ,   "Secom.Close"  ,  "Secom.Volume",  "Secom.Adjusted")
+
+Tokyu <- as.xts(`3289.T`)
+names(Tokyu) <- c("Tokyu.Open"   ,  "Tokyu.High"   ,  "Tokyu.Low"   ,   "Tokyu.Close"  ,  "Tokyu.Volume",  "Tokyu.Adjusted")
+```
+
+Part 3: Retrieving data using Quantmod for Indian stocks
+
+```{r eval=FALSE, include=TRUE}
+startIN <- as.Date("2018-06-18")
+endIN <- as.Date("2018-10-18")
+
+symbolBasketIN <- c("TATASTEEL.BO", "TECHM.BO", "BAJAJ-AUTO.BO", "ICICIBANK.BO", "LT.BO")
+
+getSymbols(symbolBasketJP , src='yahoo', from = startJP, to = endJP)
+
+Tata <- as.xts(`TATASTEEL.BO`)
+names(Tata) <- c("Tata.Open"   ,  "Tata.High"   ,  "Tata.Low"   ,   "Tata.Close"  ,  "Tata.Volume",  "Tata.Adjusted")
+
+Mahindra <- as.xts(`TECHM.BO`)
+names(Mahindra) <- c("Mahindra.Open"   ,  "Mahindra.High"   ,  "Mahindra.Low"   ,   "Mahindra.Close"  ,  "Mahindra.Volume",  "Mahindra.Adjusted")
+
+Bajaj <- as.xts(`BAJAJ-AUTO.BO`)
+names(Bajaj) <- c("Bajaj.Open"   ,  "Bajaj.High"   ,  "Bajaj.Low"   ,   "Bajaj.Close"  ,  "Bajaj.Volume",  "Bajaj.Adjusted")
+
+ICICI <- as.xts(`ICICIBANK.BO`)
+names(ICICI) <- c("ICICI.Open"   ,  "ICICI.High"   ,  "ICICI.Low"   ,   "ICICI.Close"  ,  "ICICI.Volume",  "ICICI.Adjusted")
+
+LT <- as.xts(`LT.BO`)
+names(LT) <- c("LT.Open"   ,  "LT.High"   ,  "LT.Low"   ,   "LT.Close"  ,  "LT.Volume",  "LT.Adjusted")
+```
+
+
 
 
