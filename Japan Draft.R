@@ -68,8 +68,11 @@ View(Tokyu)
 
 #Market Data
 JPMKT <- read.csv("JP MKT.csv")
+JPRF <- read.csv("JP RF.csv")
 
 JPMKT$Return <- (JPMKT$Close-JPMKT$Open)/JPMKT$Open
+JPRF$Return <- (JPRF$Close-JPRF$Open)/JPRF$Open
+
 
 #Stock Data
 
@@ -202,7 +205,7 @@ JPMKT.EW<- JPMKT[39:88,] #Creating a subset from the risk-free data, i.e. our Ev
 JPRF.EP<- JPRF[1:38,] #Creating a subset from the Market data, i.e. our Estimation Period, from 9th May to 29th June
 JPRF.EW<- JPRF[39:88,] #Creating a subset from the risk-free data, i.e. our Event Window, from 2nd July to 7th September
 
-
+names(JPMKT.EP)
 ## now we use the EP to figure out alpha and beta 
 Amada.EP$Amada.MRP <- JPMKT.EP$Return - JPRF.EP$Return
 Amada.EP$Amada.SRP <- Amada.EP$Amada.Return - JPRF.EP$Return
@@ -214,7 +217,7 @@ alpha <- -0.003608 #(p value 0.00333, thus significant at the 1% level)
 beta <- 0.977012
 
 ## now we calculate the AR in the EW 
-Amada.EW$Amada.AR <- Amada.EW$Amada.Return - (-0.003608 + 0.977012*(JPMKT.EW$Return - JPRF.EW$Return))
+Amada.EW$Amada.AR <- Amada.EW$Amada.Return - (JPRF.EW$Return -0.003608 + 0.977012*(JPMKT.EW$Return - JPRF.EW$Return))
 Amada.CAR <- cumsum(Amada.EW$Amada.AR)
 
 ## let's plot the CAR 
@@ -246,7 +249,7 @@ alpha2 = -0.004790 # (p-value is 0.0003, meaning it is statistically different f
 beta2 = 0.806119
 
 ## now we calculate the AR in the EW2 
-Amada.EW2$Amada.AR2 <- Amada.EW2$Amada.Return - (-0.004790 + 0.806119*(JPMKT.EW2$Return - JPRF.EW2$Return))
+Amada.EW2$Amada.AR2 <- Amada.EW2$Amada.Return - (JPRF.EW2$Return -0.004790 + 0.806119*(JPMKT.EW2$Return - JPRF.EW2$Return))
 Amada.CAR2 <- cumsum(Amada.EW2$Amada.AR2)
 Amada.CAR2
 plot(Amada.CAR2)
@@ -400,8 +403,4 @@ pfit<- prune(fit, cp=0.01160389) # from cptable
 # plot the pruned tree
 plot(pfit, uniform=TRUE, main="Pruned Regression Tree for CAR")
 text(pfit, use.n=TRUE, all=TRUE, cex=.8)
-
-
-
-
 
