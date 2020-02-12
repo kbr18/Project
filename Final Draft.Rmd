@@ -1,0 +1,36 @@
+---
+title: "Final Draft"
+author: "Jahnvi Jhaveri"
+date: "12/02/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+install.packages("quantmod")
+library(quantmod)
+
+startJP <- as.Date("2018-05-09")
+endJP <- as.Date("2018-09-09")
+
+symbolBasketJP <- c("6113.T", "3865.T", "7211.T", "9735.T", "3289.T")
+
+getSymbols(symbolBasketJP , src='yahoo', from = startJP, to = endJP)
+
+Amada <- as.xts(`6113.T`)
+names(Amada) <- c("Amada.Open"   ,  "Amada.High"   ,  "Amada.Low"   ,   "Amada.Close"  , "Amada.Volume",  "Amada.Adjusted")
+View(Amada)
+
+Hokuetsu <- as.xts(`3865.T`)
+
+for(symbolBasket in symbolBasket){
+  stockData <- getSymbols(Symbols = i, 
+                      src = "yahoo", 
+                      from = startJP,
+                      to = endJP
+                      auto.assign = FALSE)
+}
+
+
