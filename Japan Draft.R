@@ -287,6 +287,15 @@ lines(xv,yv, col="green")
 #Tree
 #WORKING ON TREE BELOW
 
+#Linear regression and logistic regression models fail in situations where the 
+#relationship between features and outcome is nonlinear or where features interact 
+#with each other. Time to shine for the decision tree! Tree based models split the data
+#multiple times according to certain cutoff values in the features. Through splitting, 
+#different subsets of the dataset are created, with each instance belonging to one subset. 
+#The final subsets are called terminal or leaf nodes and the intermediate subsets are called 
+#internal nodes or split nodes. To predict the outcome in each leaf node, the average outcome 
+#of the training data in this node is used
+
 #Regression trees
 #Linear regression specifies an explicit model, which is linear in coef-
 #ficients, for the regression function. It works well when the model is
