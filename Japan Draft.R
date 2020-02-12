@@ -188,6 +188,98 @@ Tokyu.EP <- Tokyu[1:38,] #Creating a subset for the Estimation Period, from 9th 
 Tokyu.EW<- Tokyu[39:88,] #Creating a subset for the Event Window, from 2nd July to 7th September
 
 
+#Approach 2
+# Calculating Cumulative Abnormal Return
+
+##creating datasets forcalculating CAR
+
+Amada.EP <- Amada[1:38,] #Creating a subset from the risk-free data, i.e. our Estimation Period, from 9th May to 29th June
+Amada.EW<- Amada[39:88,] #Creating a subset from the risk-free data, i.e. our Event Window, from 2nd July to 7th September
+
+JPMKT.EP<- JPMKT[1:38,] #Creating a subset from the Market data, i.e. our Estimation Period, from 9th May to 29th June
+JPMKT.EW<- JPMKT[39:88,] #Creating a subset from the risk-free data, i.e. our Event Window, from 2nd July to 7th September
+
+JPRF.EP<- JPRF[1:38,] #Creating a subset from the Market data, i.e. our Estimation Period, from 9th May to 29th June
+JPRF.EW<- JPRF[39:88,] #Creating a subset from the risk-free data, i.e. our Event Window, from 2nd July to 7th September
+
+
+## now we use the EP to figure out alpha and beta 
+Amada.EP$Amada.MRP <- JPMKT.EP$Return - JPRF.EP$Return
+Amada.EP$Amada.SRP <- Amada.EP$Amada.Return - JPRF.EP$Return
+
+r1<- glm(Amada.EP$Amada.SRP~ Amada.EP$Amada.MRP) #from thisd we will get alpha and beta for AR in the EW  
+summary(r1)
+
+alpha <- -0.003608 #(p value 0.00333, thus significant at the 1% level)
+beta <- 0.977012
+
+## now we calculate the AR in the EW 
+Amada.EW$Amada.AR <- Amada.EW$Amada.Return - (-0.003608 + 0.977012*(JPMKT.EW$Return - JPRF.EW$Return))
+Amada.CAR <- cumsum(Amada.EW$Amada.AR)
+
+## let's plot the CAR 
+Amada.EW$Amada.DateNum <- 1:nrow(Amada.EW)
+plot(Amada.CAR)
+
+############################## 
+
+# now we calculate the CAR from the previous period of june to be used as a counterfactualand predict from that
+
+## first we create the datasets
+Amada.EP2 <- Amada[1:20,] #Creating a subset from the risk-free data, i.e. our Estimation Period, from 9th May to 29th June
+Amada.EW2<- Amada[21:38,] #Creating a subset from the risk-free data, i.e. our Event Window, from 2nd July to 7th September
+
+JPMKT.EP2<- JPMKT[1:20,] #Creating a subset from the Market data, i.e. our Estimation Period, from 9th May to 29th June
+JPMKT.EW2<- JPMKT[21:38,]  #Creating a subset from the risk-free data, i.e. our Event Window, from 2nd July to 7th September
+
+JPRF.EP2<- JPRF[1:20,] #Creating a subset from the Market data, i.e. our Estimation Period, from 9th May to 29th June
+JPRF.EW2<- JPRF[21:38,]  #Creating a subset from the risk-free data, i.e. our Event Window, from 2nd July to 7th September
+
+## now we use the EP2 to figure out alpha and beta 
+Amada.EP2$Amada.MRP2 <- JPMKT.EP2$Return - JPRF.EP2$Return
+Amada.EP2$Amada.SRP2 <- Amada.EP2$Amada.Return - JPRF.EP2$Return
+
+r2<- glm(Amada.EP2$Amada.SRP2~ Amada.EP2$Amada.MRP2) #from thisd we will get alpha and beta for AR in the EW2  
+summary(r2)
+
+alpha2 = -0.004790 # (p-value is 0.0003, meaning it is statistically different from zero, at 1% level)
+beta2 = 0.806119
+
+## now we calculate the AR in the EW2 
+Amada.EW2$Amada.AR2 <- Amada.EW2$Amada.Return - (-0.004790 + 0.806119*(JPMKT.EW2$Return - JPRF.EW2$Return))
+Amada.CAR2 <- cumsum(Amada.EW2$Amada.AR2)
+Amada.CAR2
+plot(Amada.CAR2)
+
+## now we predict
+Amada.EW2$Amada.DateNum <- 1:nrow(Amada.EW2) # for defining the data as number
+
+y<- Amada.CAR2
+x<- Amada.EW2$Amada.DateNum
+
+xsq<- x^2
+xcub<- x^3
+xquar<- x^4
+
+
+plot(x,y)
+
+fit1<- lm(y~x)
+anova(fit1)
+abline(fit1, col="red")
+
+fit4<-lm(y~x+xsq+xcub+xquar)
+summary(fit4)
+anova(fit4)
+
+xv<-seq(min(x), max(x), 0.01)
+
+yv<-predict(fit4, list(x=xv, xsq = xv^2, xcub = xv^3, xquar = xv^4))
+
+lines(xv,yv, col="green")
+
+
+
 
 #Tree
 #WORKING ON TREE BELOW
