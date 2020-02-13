@@ -58,9 +58,12 @@ names(LT) <- c("LT.Open"   ,  "LT.High"   ,  "LT.Low"   ,   "LT.Close"  ,  "LT.V
 ```
 
 Estimation Period JP: From 9th May to 29th June
+
 Event Window JP: From 2nd July to 7th September
 
+
 Estimation Period IN: From 18th June to 8th August
+
 Event Window IN: From 9th August to 17th October
 
 Part 4: Market data and risk-free
@@ -94,7 +97,7 @@ Part 5: Cumulative Abnormal Return (CAR) Calculations for Japanese Stocks
 
 Sub-part a: Amada CAR
 ```{r eval=FALSE, include=TRUE}
-#Calculate Return
+#Calculate Daily Return
 Amada$Amada.Return <- (Amada$Amada.Close-Amada$Amada.Open)/Amada$Amada.Open
 plot(Amada$Amada.Return)
 hist(Amada$Amada.Return)
@@ -129,7 +132,7 @@ candleChart(Amada.CAR)
 
 Sub-part b: Hokuetsu CAR
 ```{r eval=FALSE, include=TRUE}
-#Calculate Return
+#Calculate Daily Return
 Hokuetsu$Hokuetsu.Return <- (Hokuetsu$Hokuetsu.Close-Hokuetsu$Hokuetsu.Open)/Hokuetsu$Hokuetsu.Open
 plot(Hokuetsu$Hokuetsu.Return)
 hist(Hokuetsu$Hokuetsu.Return)
@@ -164,7 +167,7 @@ plot(Hokuetsu.CAR)
 
 Sub-part c: Mitsubishi CAR
 ```{r eval=FALSE, include=TRUE}
-#Calculate Return
+#Calculate Daily Return
 Mitsubishi$Mitsubishi.Return <- (Mitsubishi$Mitsubishi.Close-Mitsubishi$Mitsubishi.Open)/Mitsubishi$Mitsubishi.Open
 plot(Mitsubishi$Mitsubishi.Return)
 hist(Mitsubishi$Mitsubishi.Return)
@@ -199,7 +202,7 @@ plot(Mitsubishi.CAR)
 
 Sub-part d: Secom CAR
 ```{r eval=FALSE, include=TRUE}
-#Calculate Return
+#Calculate Daily Return
 Secom$Secom.Return <- (Secom$Secom.Close-Secom$Secom.Open)/Secom$Secom.Open
 plot(Secom$Secom.Return)
 hist(Secom$Secom.Return)
@@ -234,7 +237,7 @@ plot(Secom.CAR)
 
 Sub-part e: Tokyu CAR
 ```{r eval=FALSE, include=TRUE}
-#Calculate Return
+#Calculate Daily Return
 Tokyu$Tokyu.Return <- (Tokyu$Tokyu.Close-Tokyu$Tokyu.Open)/Tokyu$Tokyu.Open
 plot(Tokyu$Tokyu.Return)
 hist(Tokyu$Tokyu.Return)
@@ -271,7 +274,7 @@ Part 6: Cumulative Abnormal Return (CAR) Calculations for Indian Stocks
 
 Sub-part a: Tata CAR
 ```{r eval=FALSE, include=TRUE}
-#Calculate Return
+#Calculate Daily Return
 Tata$Tata.Return <- (Tata$Tata.Close-Tata$Tata.Open)/Tata$Tata.Open
 plot(Tata$Tata.Return)
 hist(Tata$Tata.Return)
@@ -305,7 +308,7 @@ plot(Tata.CAR)
 
 Sub-part b: Mahindra CAR
 ```{r eval=FALSE, include=TRUE}
-#Calculate Return
+#Calculate Daily Return
 Mahindra$Mahindra.Return <- (Mahindra$Mahindra.Close-Mahindra$Mahindra.Open)/Mahindra$Mahindra.Open
 plot(Mahindra$Mahindra.Return)
 hist(Mahindra$Mahindra.Return)
@@ -339,7 +342,7 @@ plot(Mahindra.CAR)
 
 Sub-part c: Bajaj CAR
 ```{r eval=FALSE, include=TRUE}
-#Calculate Return
+#Calculate Daily Return
 Bajaj$Bajaj.Return <- (Bajaj$Bajaj.Close-Bajaj$Bajaj.Open)/Bajaj$Bajaj.Open
 plot(Bajaj$Bajaj.Return)
 hist(Bajaj$Bajaj.Return)
@@ -373,7 +376,7 @@ plot(Bajaj.CAR)
 
 Sub-part d: ICICI CAR
 ```{r eval=FALSE, include=TRUE}
-#Calculate Return
+#Calculate Daily Return
 ICICI$ICICI.Return <- (ICICI$ICICI.Close-ICICI$ICICI.Open)/ICICI$ICICI.Open
 plot(ICICI$ICICI.Return)
 hist(ICICI$ICICI.Return)
@@ -407,7 +410,7 @@ plot(ICICI.CAR)
 
 Sub-part e: LT CAR
 ```{r eval=FALSE, include=TRUE}
-#Calculate Return
+#Calculate Daily Return
 LT$LT.Return <- (LT$LT.Close-LT$LT.Open)/LT$LT.Open
 plot(LT$LT.Return)
 hist(LT$LT.Return)
