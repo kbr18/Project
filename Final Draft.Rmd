@@ -127,7 +127,21 @@ Amada.EW$Amada.DateNum <- 1:nrow(Amada.EW)
 
 ```{r eval=FALSE, include=TRUE}
 #Plot CAR 
-candleChart(Amada.CAR)
+plot(Amada.CAR)
+
+#Observing the trends in the stock price and stock volume sold (MAYBE DELETE THIS LINE OF CODE!!)
+chartSeries(Amada,subset = '2018-07::2018-09',up.col='white',dn.col='blue')
+
+#Aggregating daily data to weekly data to get a more concise idea of CAR effects across the EW. For most weeks in this period, the CAR has fallen (week-on-week)
+chartSeries(to.weekly(Amada.CAR),subset = '2018-06::2018-09',up.col='white',dn.col='blue')
+
+chartSeries(Amada.CAR, 
+            type = c("auto", "candlesticks"), 
+            subset = '2018-07::2018-09',
+            show.grid = TRUE,
+            major.ticks='auto', minor.ticks=TRUE,
+            TA=c(addMACD(),addVo()))
+
 ```
 
 Sub-part b: Hokuetsu CAR
@@ -163,6 +177,20 @@ Hokuetsu.EW$Hokuetsu.DateNum <- 1:nrow(Hokuetsu.EW)
 ```{r eval=FALSE, include=TRUE}
 #Plot CAR 
 plot(Hokuetsu.CAR)
+
+#Observing the trends in the stock price and stock volume sold (MAYBE DELETE THIS LINE OF CODE!!)
+chartSeries(Hokuetsu,subset = '2018-07::2018-09',up.col='white',dn.col='blue')
+
+#Aggregating daily data to weekly data to get a more concise idea of CAR effects across the EW. 
+chartSeries(to.weekly(Hokuetsu.CAR),subset = '2018-06::2018-09',up.col='white',dn.col='blue')
+
+chartSeries(Hokuetsu.CAR, 
+            type = c("auto", "candlesticks"), 
+            subset = '2018-07::2018-09',
+            show.grid = TRUE,
+            major.ticks='auto', minor.ticks=TRUE,
+            TA=c(addMACD(),addVo()))
+
 ```
 
 Sub-part c: Mitsubishi CAR
@@ -198,6 +226,20 @@ Mitsubishi.EW$Mitsubishi.DateNum <- 1:nrow(Mitsubishi.EW)
 ```{r eval=FALSE, include=TRUE}
 #Plot CAR 
 plot(Mitsubishi.CAR)
+
+#Observing the trends in the stock price and stock volume sold (MAYBE DELETE THIS LINE OF CODE!!)
+chartSeries(Mitsubishi,subset = '2018-07::2018-09',up.col='white',dn.col='blue')
+
+#Aggregating daily data to weekly data to get a more concise idea of CAR effects across the EW. 
+chartSeries(to.weekly(Mitsubishi.CAR),subset = '2018-06::2018-09',up.col='white',dn.col='blue')
+
+chartSeries(Mitsubishi.CAR, 
+            type = c("auto", "candlesticks"), 
+            subset = '2018-07::2018-09',
+            show.grid = TRUE,
+            major.ticks='auto', minor.ticks=TRUE,
+            TA=c(addMACD(),addVo()))
+
 ```
 
 Sub-part d: Secom CAR
@@ -233,6 +275,19 @@ Secom.EW$Secom.DateNum <- 1:nrow(Secom.EW)
 ```{r eval=FALSE, include=TRUE}
 #Plot CAR 
 plot(Secom.CAR)
+
+#Observing the trends in the stock price and stock volume sold (MAYBE DELETE THIS LINE OF CODE!!)
+chartSeries(Secom,subset = '2018-07::2018-09',up.col='white',dn.col='blue')
+
+#Aggregating daily data to weekly data to get a more concise idea of CAR effects across the EW. 
+chartSeries(to.weekly(Secom.CAR),subset = '2018-06::2018-09',up.col='white',dn.col='blue')
+
+chartSeries(Secom.CAR, 
+            type = c("auto", "candlesticks"), 
+            subset = '2018-07::2018-09',
+            show.grid = TRUE,
+            major.ticks='auto', minor.ticks=TRUE,
+            TA=c(addMACD(),addVo()))
 ```
 
 Sub-part e: Tokyu CAR
@@ -268,6 +323,19 @@ Tokyu.EW$Tokyu.DateNum <- 1:nrow(Tokyu.EW)
 ```{r eval=FALSE, include=TRUE}
 #Plot CAR 
 plot(Tokyu.CAR)
+
+#Observing the trends in the stock price and stock volume sold (MAYBE DELETE THIS LINE OF CODE!!)
+chartSeries(Tokyu,subset = '2018-07::2018-09',up.col='white',dn.col='blue')
+
+#Aggregating daily data to weekly data to get a more concise idea of CAR effects across the EW. 
+chartSeries(to.weekly(Tokyu.CAR),subset = '2018-06::2018-09',up.col='white',dn.col='blue')
+
+chartSeries(Tokyu.CAR, 
+            type = c("auto", "candlesticks"), 
+            subset = '2018-07::2018-09',
+            show.grid = TRUE,
+            major.ticks='auto', minor.ticks=TRUE,
+            TA=c(addMACD(),addVo()))
 ```
 
 Part 6: Cumulative Abnormal Return (CAR) Calculations for Indian Stocks
@@ -304,6 +372,20 @@ Tata.EW$Tata.DateNum <- 1:nrow(Tata.EW)
 ```{r eval=FALSE, include=TRUE}
 #Plot CAR 
 plot(Tata.CAR)
+
+#Observing the trends in the stock price and stock volume sold (MAYBE DELETE THIS LINE OF CODE!!)
+chartSeries(Tata,subset = '2018-08::2018-10',up.col='white',dn.col='blue')
+
+#Aggregating daily data to weekly data to get a more concise idea of CAR effects across the EW. 
+chartSeries(to.weekly(Tata.CAR),subset = '2018-08::2018-10',up.col='white',dn.col='blue')
+
+chartSeries(Tata.CAR, 
+            type = c("auto", "candlesticks"), 
+            subset = '2018-08::2018-10',
+            show.grid = TRUE,
+            major.ticks='auto', minor.ticks=TRUE,
+            TA=c(addMACD(),addVo()))
+
 ```
 
 Sub-part b: Mahindra CAR
@@ -338,6 +420,21 @@ Mahindra.EW$Mahindra.DateNum <- 1:nrow(Mahindra.EW)
 ```{r eval=FALSE, include=TRUE}
 #Plot CAR 
 plot(Mahindra.CAR)
+
+#Observing the trends in the stock price and stock volume sold (MAYBE DELETE THIS LINE OF CODE!!)
+chartSeries(Mahindra,subset = '2018-08::2018-10',up.col='white',dn.col='blue')
+
+#Aggregating daily data to weekly data to get a more concise idea of CAR effects across the EW. 
+chartSeries(to.weekly(Mahindra.CAR),subset = '2018-08::2018-10',up.col='white',dn.col='blue')
+
+chartSeries(Mahindra.CAR, 
+            type = c("auto", "candlesticks"), 
+            subset = '2018-08::2018-10',
+            show.grid = TRUE,
+            major.ticks='auto', minor.ticks=TRUE,
+            TA=c(addMACD(),addVo()))
+
+
 ```
 
 Sub-part c: Bajaj CAR
@@ -372,6 +469,21 @@ Bajaj.EW$Bajaj.DateNum <- 1:nrow(Bajaj.EW)
 ```{r eval=FALSE, include=TRUE}
 #Plot CAR 
 plot(Bajaj.CAR)
+
+#Observing the trends in the stock price and stock volume sold (MAYBE DELETE THIS LINE OF CODE!!)
+chartSeries(Bajaj,subset = '2018-08::2018-10',up.col='white',dn.col='blue')
+
+#Aggregating daily data to weekly data to get a more concise idea of CAR effects across the EW. 
+chartSeries(to.weekly(Bajaj.CAR),subset = '2018-08::2018-10',up.col='white',dn.col='blue')
+
+chartSeries(Bajaj.CAR, 
+            type = c("auto", "candlesticks"), 
+            subset = '2018-08::2018-10',
+            show.grid = TRUE,
+            major.ticks='auto', minor.ticks=TRUE,
+            TA=c(addMACD(),addVo()))
+
+
 ```
 
 Sub-part d: ICICI CAR
@@ -406,6 +518,20 @@ ICICI.EW$ICICI.DateNum <- 1:nrow(ICICI.EW)
 ```{r eval=FALSE, include=TRUE}
 #Plot CAR 
 plot(ICICI.CAR)
+
+#Observing the trends in the stock price and stock volume sold (MAYBE DELETE THIS LINE OF CODE!!)
+chartSeries(ICICI,subset = '2018-08::2018-10',up.col='white',dn.col='blue')
+
+#Aggregating daily data to weekly data to get a more concise idea of CAR effects across the EW. 
+chartSeries(to.weekly(ICICI.CAR),subset = '2018-08::2018-10',up.col='white',dn.col='blue')
+
+chartSeries(ICICI.CAR, 
+            type = c("auto", "candlesticks"), 
+            subset = '2018-08::2018-10',
+            show.grid = TRUE,
+            major.ticks='auto', minor.ticks=TRUE,
+            TA=c(addMACD(),addVo()))
+
 ```
 
 Sub-part e: LT CAR
@@ -440,6 +566,19 @@ LT.EW$LT.DateNum <- 1:nrow(LT.EW)
 ```{r eval=FALSE, include=TRUE}
 #Plot CAR 
 plot(LT.CAR)
+
+#Observing the trends in the stock price and stock volume sold (MAYBE DELETE THIS LINE OF CODE!!)
+chartSeries(LT,subset = '2018-08::2018-10',up.col='white',dn.col='blue')
+
+#Aggregating daily data to weekly data to get a more concise idea of CAR effects across the EW. 
+chartSeries(to.weekly(LT.CAR),subset = '2018-08::2018-10',up.col='white',dn.col='blue')
+
+chartSeries(LT.CAR, 
+            type = c("auto", "candlesticks"), 
+            subset = '2018-08::2018-10',
+            show.grid = TRUE,
+            major.ticks='auto', minor.ticks=TRUE,
+            TA=c(addMACD(),addVo()))
 ```
 
 Part 7: Regression Trees 
