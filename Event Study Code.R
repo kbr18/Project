@@ -3,6 +3,7 @@ library(EventStudy)
 install.packages("quantmod")
 library(quantmod)
 
+#APPROACH ONE
 
 #Step 1: List the assets and the date of the event 
 eventsDates<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-09","2018-07-09","2018-07-09","2018-07-09")) 
@@ -49,3 +50,45 @@ plot(es.mm)
 
 #Step 9: Results 
 summary(es.mm)
+
+
+
+#APPROACH TWO
+rm(list=ls()) 
+library(quantmod) 
+GFSA<-read.csv("GFSA3.SA.csv") 
+CYRE<-read.csv("CYRE3.SA.csv") 
+BVSP<-read.csv("^BVSP.csv") 
+#Convert the date 
+GFSA$Date<-as.character(GFSA$Date) 
+GFSA$Date<-as.Date(GFSA$Date,format="%Y-%m-%d") 
+GFSA <- xts(GFSA[,-1], order.by=GFSA[,1]) 
+CYRE$Date<-as.character(CYRE$Date) 
+CYRE$Date<-as.Date(CYRE$Date,format="%Y-%m-%d") 
+CYRE <- xts(CYRE[,-1], order.by=CYRE[,1]) 
+BVSP$Date<-as.character(BVSP$Date) 
+BVSP$Date<-as.Date(BVSP$Date,format="%Y-%m-%d") 
+BVSP <- xts(BVSP[,-1], order.by=BVSP[,1]) 
+
+#Bubble in 2008 
+startEvent = as.Date("2008-03-13") 
+
+#Stabilish the window 
+endEvent = as.Date("2008-03-18") 
+
+#Start of the series 
+startDate<-as.Date("2008-01-01") 
+
+#Calculate the log-retorn. 
+diffGFSA<-diff(log(GFSA$Adj.Close)) 
+diffCYRE<-diff(log(CYRE$Adj.Close)) 
+
+#Plot the adjusted close series 
+plot.xts(diffGFSA,major.format="%b/%d/%Y", main="GAFISA",ylab="Log-return Adj.Close price.",xlab="Time") 
+plot.xts(diffCYRE,major.format="%b/%d/%Y", main="CYRELA",ylab="Log-return Adj.Close price.",xlab="Time")
+
+
+
+
+
+

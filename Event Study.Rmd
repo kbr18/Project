@@ -46,12 +46,34 @@ Tokyu$Tokyu.Return <- (Tokyu$Tokyu.Close-Tokyu$Tokyu.Open)/Tokyu$Tokyu.Open
 
 Step 4: List the assets and the date of the event
 ```{r eval=FALSE, include=TRUE}
-eventsDates<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-09","2018-07-09","2018-07-09","2018-07-09")) 
+eventsDatesJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-09","2018-07-09","2018-07-09","2018-07-09")) 
 ```
 
 Step 5: Convert the text
 ```{r eval=FALSE, include=TRUE}
-eventsDates$name<-as.character(eventsDates$name) 
-eventsDates$when<-as.character(eventsDates$when) 
+eventsDatesJP$name<-as.character(eventsDatesJP$name) 
+eventsDatesJP$when<-as.character(eventsDatesJP$when) 
 ```
+
+Step 6: Convert into zoo objects
+```{r eval=FALSE, include=TRUE}
+Amada.zoo<-read.zoo(Amada$Amada.Return)
+```
+
+
+```{r eval=FALSE, include=TRUE}
+esAmada <- EventStudy(firm.returns = Amada.zoo,
+                  event.list = eventsDatesJP,
+                  event.window = 5,
+                  type = "None",
+                  to.remap = TRUE,
+                  remap = "cumsum",
+                  inference = TRUE,
+                  inference.strategy = "bootstrap")
+```
+
+
+
+
+
 
