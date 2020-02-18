@@ -1,0 +1,49 @@
+Part 1: Installing Packages
+
+```{r eval=FALSE, include=TRUE}
+install.packages("quantmod")
+library(quantmod)
+```
+
+Part 2: Retrieving data using Quantmod for Japanese stocks
+
+```{r eval=FALSE, include=TRUE}
+startJP <- as.Date("2018-05-09")
+endJP <- as.Date("2018-09-09")
+
+symbolBasketJP <- c("6113.T", "3865.T", "7211.T", "9735.T", "3289.T")
+
+getSymbols(symbolBasketJP , src='yahoo', from = startJP, to = endJP)
+
+Amada <- as.xts(`6113.T`)
+names(Amada) <- c("Amada.Open"   ,  "Amada.High"   ,  "Amada.Low"   ,   "Amada.Close"  , "Amada.Volume",  "Amada.Adjusted")
+
+Hokuetsu <- as.xts(`3865.T`)
+names(Hokuetsu) <- c("Hokuetsu.Open"   ,  "Hokuetsu.High"   ,  "Hokuetsu.Low"   ,   "Hokuetsu.Close"  ,  "Hokuetsu.Volume",  "Hokuetsu.Adjusted")
+
+Mitsubishi <- as.xts(`7211.T`)
+names(Mitsubishi) <- c("Mitsubishi.Open"   ,  "Mitsubishi.High"   ,  "Mitsubishi.Low"   ,   "Mitsubishi.Close"  ,  "Mitsubishi.Volume",  "Mitsubishi.Adjusted")
+
+Secom <- as.xts(`9735.T`)
+names(Secom) <- c("Secom.Open"   ,  "Secom.High"   ,  "Secom.Low"   ,   "Secom.Close"  ,  "Secom.Volume",  "Secom.Adjusted")
+
+Tokyu <- as.xts(`3289.T`)
+names(Tokyu) <- c("Tokyu.Open"   ,  "Tokyu.High"   ,  "Tokyu.Low"   ,   "Tokyu.Close"  ,  "Tokyu.Volume",  "Tokyu.Adjusted")
+```
+
+Step 3: Calculating Returns for all the stocks
+
+```{r eval=FALSE, include=TRUE}
+Amada$Amada.Return <- (Amada$Amada.Close-Amada$Amada.Open)/Amada$Amada.Open
+
+Hokuetsu$Hokuetsu.Return <- (Hokuetsu$Hokuetsu.Close-Hokuetsu$Hokuetsu.Open)/Hokuetsu$Hokuetsu.Open
+
+Mitsubishi$Mitsubishi.Return <- (Mitsubishi$Mitsubishi.Close-Mitsubishi$Mitsubishi.Open)/Mitsubishi$Mitsubishi.Open
+
+Secom$Secom.Return <- (Secom$Secom.Close-Secom$Secom.Open)/Secom$Secom.Open
+
+Tokyu$Tokyu.Return <- (Tokyu$Tokyu.Close-Tokyu$Tokyu.Open)/Tokyu$Tokyu.Open
+```
+
+
+
