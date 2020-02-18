@@ -10,12 +10,9 @@ library(EventStudy)
 Part 2: Retrieving data using Quantmod for Japanese stocks
 
 ```{r eval=FALSE, include=TRUE}
-startJP <- as.Date("2018-05-09")
-endJP <- as.Date("2018-09-09")
-
 symbolBasketJP <- c("6113.T", "3865.T", "7211.T", "9735.T", "3289.T")
 
-getSymbols(symbolBasketJP , src='yahoo', from = startJP, to = endJP)
+getSymbols(symbolBasketJP , src='yahoo')
 
 Amada <- as.xts(`6113.T`)
 names(Amada) <- c("Amada.Open"   ,  "Amada.High"   ,  "Amada.Low"   ,   "Amada.Close"  , "Amada.Volume",  "Amada.Adjusted")
@@ -47,5 +44,14 @@ Secom$Secom.Return <- (Secom$Secom.Close-Secom$Secom.Open)/Secom$Secom.Open
 Tokyu$Tokyu.Return <- (Tokyu$Tokyu.Close-Tokyu$Tokyu.Open)/Tokyu$Tokyu.Open
 ```
 
+Step 4: List the assets and the date of the event
+```{r eval=FALSE, include=TRUE}
+eventsDates<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-09","2018-07-09","2018-07-09","2018-07-09")) 
+```
 
+Step 5: Convert the text
+```{r eval=FALSE, include=TRUE}
+eventsDates$name<-as.character(eventsDates$name) 
+eventsDates$when<-as.character(eventsDates$when) 
+```
 
