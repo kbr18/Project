@@ -6,6 +6,7 @@ library(quantmod)
 install.packages("EventStudy")
 library(EventStudy)
 library(dplyr)
+devtools::install_github("nipfpmf/eventstudies", ref="master")
 ```
 
 Part 2: Retrieving data using Quantmod for Japanese stocks
@@ -37,13 +38,15 @@ names(Tokyu) <- c("Tokyu.Open"   ,  "Tokyu.High"   ,  "Tokyu.Low"   ,   "Tokyu.C
 Step 3: Merging datasets and extracting close price
 
 ```{r eval=FALSE, include=TRUE}
-dataJP<-merge(Amada, Hokuetsu, Mitsubishi, Secom, Tokyu)
-dataJP[,c(4, 10, 16, 22, 28)]
+data<-merge(Amada, Hokuetsu, Mitsubishi, Secom, Tokyu)
+dataJP<-data[,c(4, 10, 16, 22, 28)]
 ```
 
 Step 4: Calculate the return
 
 ```{r eval=FALSE, include=TRUE}
+StockPriceReturnJP <- read.csv(file="StockPriceReturnJP.csv")
+
 dataJP$Amada.Close <- c(NA,diff(log(as.numeric(dataJP$Amada.Close)), lag=1))
 
 dataJP$Hokuetsu.Close <- c(NA,diff(log(as.numeric(dataJP$Hokuetsu.Close)), lag=1))
@@ -57,33 +60,35 @@ dataJP$Tokyu.Close <- c(NA,diff(log(as.numeric(dataJP$Tokyu.Close)), lag=1))
 
 Step 5: Convert to zoo
 ```{r eval=FALSE, include=TRUE}
-write.zoo(dataJP, file="DataJP.csv")
+write.zoo(StockPriceReturnJP, file="StockPriceReturnJP.csv")
+?read.zoo
+read.zoo(StockPriceReturnJP, format = "%Y.%m.%d")
 ```
 
 Step 6: List the assets and the date of the event
 ```{r eval=FALSE, include=TRUE}
-eventsDatesJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-09","2018-07-09","2018-07-09","2018-07-09")) 
+eventDateJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-09","2018-07-09","2018-07-09","2018-07-09"))
 ```
 
 Step 7: Convert the text
 ```{r eval=FALSE, include=TRUE}
-eventsDatesJP$name<-as.character(eventsDatesJP$name) 
-eventsDatesJP$when<-as.character(eventsDatesJP$when) 
+eventDateJP$name<-as.character(eventDateJP$name)
+eventDateJP$when<-as.Date(eventDateJP$when)
 ```
 
 Step 8: EventStudy
 ```{r eval=FALSE, include=TRUE}
 help(EventStudy)
 ?EventStudy
-esJapan <- EventStudy::eventstudy(firm.returns = dataJP,
-                      event.list = eventsDatesJP,
-                      event.window = 5,
-                      type = "None",
-                      to.remap = TRUE,
-                      remap = "cumsum",
-                      inference = TRUE,
-                      inference.strategy = "bootstrap")
-
+es <- eventstudies::eventstudy(firm.returns = StockPriceReturnJP,
+                               event.list = eventDateJP,
+                               event.window = 7,
+                               type = "None",
+                               to.remap = TRUE,
+                               remap = "cumsum",
+                               inference = TRUE,
+                               inference.strategy = "bootstrap",
+                               )
 ```
 
 Step 9: Plot event study 
@@ -103,7 +108,8 @@ summary(es.mm)
 
 
 ```{r eval=FALSE, include=TRUE}
-
+data("SplitDates", package = "eventstudies")
+SplitDates <- data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-09","2018-07-09","2018-07-09","2018-07-09"))
 ```
 
 
