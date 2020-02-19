@@ -5,16 +5,18 @@ install.packages("quantmod")
 library(quantmod)
 install.packages("EventStudy")
 library(EventStudy)
-install.packages("devtools")
-devtools::install_github("EventStudyTools/api-wrapper.r")
+library(dplyr)
 ```
 
 Part 2: Retrieving data using Quantmod for Japanese stocks
 
 ```{r eval=FALSE, include=TRUE}
+startJP <- as.Date("2018-05-09")
+endJP <- as.Date("2018-09-09")
+
 symbolBasketJP <- c("6113.T", "3865.T", "7211.T", "9735.T", "3289.T")
 
-getSymbols(symbolBasketJP , src='yahoo')
+getSymbols(symbolBasketJP , src='yahoo', from = startJP, to = endJP)
 
 Amada <- as.xts(`6113.T`)
 names(Amada) <- c("Amada.Open"   ,  "Amada.High"   ,  "Amada.Low"   ,   "Amada.Close"  , "Amada.Volume",  "Amada.Adjusted")
@@ -32,90 +34,96 @@ Tokyu <- as.xts(`3289.T`)
 names(Tokyu) <- c("Tokyu.Open"   ,  "Tokyu.High"   ,  "Tokyu.Low"   ,   "Tokyu.Close"  ,  "Tokyu.Volume",  "Tokyu.Adjusted")
 ```
 
-Step 4: List the assets and the date of the event
+Step 3: Merging datasets and extracting close price
+
+```{r eval=FALSE, include=TRUE}
+dataJP<-merge(Amada, Hokuetsu, Mitsubishi, Secom, Tokyu)
+dataJP[,c(4, 10, 16, 22, 28)]
+```
+
+Step 4: Calculate the return
+
+```{r eval=FALSE, include=TRUE}
+dataJP$Amada.Close <- c(NA,diff(log(as.numeric(dataJP$Amada.Close)), lag=1))
+
+dataJP$Hokuetsu.Close <- c(NA,diff(log(as.numeric(dataJP$Hokuetsu.Close)), lag=1))
+
+dataJP$Mitsubishi.Close <- c(NA,diff(log(as.numeric(dataJP$Mitsubishi.Close)), lag=1))
+
+dataJP$Secom.Close <- c(NA,diff(log(as.numeric(dataJP$Secom.Close)), lag=1))
+
+dataJP$Tokyu.Close <- c(NA,diff(log(as.numeric(dataJP$Tokyu.Close)), lag=1))
+```
+
+Step 5: Convert to zoo
+```{r eval=FALSE, include=TRUE}
+write.zoo(dataJP, file="DataJP.csv")
+```
+
+Step 6: List the assets and the date of the event
 ```{r eval=FALSE, include=TRUE}
 eventsDatesJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-09","2018-07-09","2018-07-09","2018-07-09")) 
 ```
 
-Step 5: Convert the text
+Step 7: Convert the text
 ```{r eval=FALSE, include=TRUE}
 eventsDatesJP$name<-as.character(eventsDatesJP$name) 
 eventsDatesJP$when<-as.character(eventsDatesJP$when) 
 ```
 
-Step 6: Convert into zoo objects
+Step 8: EventStudy
 ```{r eval=FALSE, include=TRUE}
-Amada.zoo<-read.zoo(Amada$Amada.Return)
+help(EventStudy)
+?EventStudy
+esJapan <- EventStudy::eventstudy(firm.returns = dataJP,
+                      event.list = eventsDatesJP,
+                      event.window = 5,
+                      type = "None",
+                      to.remap = TRUE,
+                      remap = "cumsum",
+                      inference = TRUE,
+                      inference.strategy = "bootstrap")
+
+```
+
+Step 9: Plot event study 
+```{r eval=FALSE, include=TRUE}
+plot(esJapan) 
+```
+
+Step 10: Results
+```{r eval=FALSE, include=TRUE}
+summary(es.mm)
 ```
 
 
+
+
+
+
+
 ```{r eval=FALSE, include=TRUE}
-esAmada <- EventStudy(firm.returns = Amada.zoo,
-                  event.list = eventsDatesJP,
-                  event.window = 5,
-                  type = "None",
-                  to.remap = TRUE,
-                  remap = "cumsum",
-                  inference = TRUE,
-                  inference.strategy = "bootstrap")
+
 ```
 
 
 
-OPTION 2
+
+
+
 
 ```{r eval=FALSE, include=TRUE}
+install.packages("devtools")
+devtools::install_github("EventStudyTools/api-wrapper.r")
+
 apiUrl <- "http://api.dev.eventstudytools.com"
 apiKey <- "573e58c665fcc08cc6e5a660beaad0cb"
-```
 
-```{r eval=FALSE, include=TRUE}
 options(apiServerUrl = apiUrl)
 options(eventStudyKey = apiKey)
 
 # initialize object
 estSetup <- EventStudyAPI$new()
 ```
-
-```{r eval=FALSE, include=TRUE}
-estType <- "arc"
-
-```
-
-```{r eval=FALSE, include=TRUE}
-
-
-```
-
-```{r eval=FALSE, include=TRUE}
-
-
-```
-
-```{r eval=FALSE, include=TRUE}
-
-
-```
-
-```{r eval=FALSE, include=TRUE}
-
-
-```
-
-```{r eval=FALSE, include=TRUE}
-
-
-```
-
-```{r eval=FALSE, include=TRUE}
-
-
-```
-
-
-
-
-
-
 
 

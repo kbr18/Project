@@ -14,7 +14,9 @@ eventsDates$when<-as.character(eventsDates$when)
 
 #Step 3: Return Lists 
 BVSP<- read.csv("^BVSP.csv") 
-BVSP<-BVSP[,c(1,6)] colnames(BVSP)<-c("Date","BVSP") 
+BVSP<-BVSP[,c(1,6)] 
+colnames(BVSP)<-c("Date","BVSP")
+
 GAFISA<- read.csv("GFSA3.SA.csv") 
 GAFISA<-GAFISA[,c(1,6)] 
 colnames(GAFISA)<-c("Date","GAFISA") 
@@ -88,6 +90,23 @@ plot.xts(diffGFSA,major.format="%b/%d/%Y", main="GAFISA",ylab="Log-return Adj.Cl
 plot.xts(diffCYRE,major.format="%b/%d/%Y", main="CYRELA",ylab="Log-return Adj.Close price.",xlab="Time")
 
 
+
+#OPTION 3
+
+install.packages("devtools")
+devtools::install_github("EventStudyTools/api-wrapper.r")
+
+apiUrl <- "http://api.dev.eventstudytools.com"
+apiKey <- "573e58c665fcc08cc6e5a660beaad0cb"
+
+
+options(apiServerUrl = apiUrl)
+options(eventStudyKey = apiKey)
+
+# initialize object
+estSetup <- EventStudyAPI$new()
+
+estType <- "arc"
 
 
 
