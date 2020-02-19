@@ -47,6 +47,7 @@ Step 4: Calculate the return
 returnJP <- read.csv(file="ReturnsJP.csv")
 
 stockPriceReturnJP <- read.zoo(returnJP, header=T, sep=",")
+View(stockPriceReturnJP)
 str(stockPriceReturnJP)
 ```
 
