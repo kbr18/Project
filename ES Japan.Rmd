@@ -56,15 +56,14 @@ Step 5: List the assets and the date of the event
 eventDateJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-06-28","2018-06-28","2018-06-28","2018-06-28","2018-06-28"))
 ```
 
-Step 7: Convert the text
+Step 6: Convert the text
+
 ```{r eval=FALSE, include=TRUE}
 eventDateJP$name<-as.character(eventDateJP$name)
 eventDateJP$when<-as.Date(eventDateJP$when)
 ```
 
-head(returnJP)
-
-Step 6: Event Study
+Step 7: Event Study
 
 ```{r eval=FALSE, include=TRUE}
 esJP <- eventstudies::eventstudy(firm.returns = stockPriceReturnJP,
@@ -78,20 +77,14 @@ esJP <- eventstudies::eventstudy(firm.returns = stockPriceReturnJP,
                                )
 ```
 
+Step 8: Plot event study
 
-Step 9: Plot event study 
 ```{r eval=FALSE, include=TRUE}
 plot(esJP)
 ```
 
-Step 10: Results
-```{r eval=FALSE, include=TRUE}
-summary(es.mm)
-```
-
+Step 9: Results
 
 ```{r eval=FALSE, include=TRUE}
-
-
-
+summary(esJP)
 ```
