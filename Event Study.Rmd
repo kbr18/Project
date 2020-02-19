@@ -5,6 +5,8 @@ install.packages("quantmod")
 library(quantmod)
 install.packages("EventStudy")
 library(EventStudy)
+install.packages("devtools")
+devtools::install_github("EventStudyTools/api-wrapper.r")
 ```
 
 Part 2: Retrieving data using Quantmod for Japanese stocks
@@ -28,20 +30,6 @@ names(Secom) <- c("Secom.Open"   ,  "Secom.High"   ,  "Secom.Low"   ,   "Secom.C
 
 Tokyu <- as.xts(`3289.T`)
 names(Tokyu) <- c("Tokyu.Open"   ,  "Tokyu.High"   ,  "Tokyu.Low"   ,   "Tokyu.Close"  ,  "Tokyu.Volume",  "Tokyu.Adjusted")
-```
-
-Step 3: Calculating Returns for all the stocks
-
-```{r eval=FALSE, include=TRUE}
-Amada$Amada.Return <- (Amada$Amada.Close-Amada$Amada.Open)/Amada$Amada.Open
-
-Hokuetsu$Hokuetsu.Return <- (Hokuetsu$Hokuetsu.Close-Hokuetsu$Hokuetsu.Open)/Hokuetsu$Hokuetsu.Open
-
-Mitsubishi$Mitsubishi.Return <- (Mitsubishi$Mitsubishi.Close-Mitsubishi$Mitsubishi.Open)/Mitsubishi$Mitsubishi.Open
-
-Secom$Secom.Return <- (Secom$Secom.Close-Secom$Secom.Open)/Secom$Secom.Open
-
-Tokyu$Tokyu.Return <- (Tokyu$Tokyu.Close-Tokyu$Tokyu.Open)/Tokyu$Tokyu.Open
 ```
 
 Step 4: List the assets and the date of the event
@@ -71,6 +59,60 @@ esAmada <- EventStudy(firm.returns = Amada.zoo,
                   inference = TRUE,
                   inference.strategy = "bootstrap")
 ```
+
+
+
+OPTION 2
+
+```{r eval=FALSE, include=TRUE}
+apiUrl <- "http://api.dev.eventstudytools.com"
+apiKey <- "573e58c665fcc08cc6e5a660beaad0cb"
+```
+
+```{r eval=FALSE, include=TRUE}
+options(apiServerUrl = apiUrl)
+options(eventStudyKey = apiKey)
+
+# initialize object
+estSetup <- EventStudyAPI$new()
+```
+
+```{r eval=FALSE, include=TRUE}
+estType <- "arc"
+
+```
+
+```{r eval=FALSE, include=TRUE}
+
+
+```
+
+```{r eval=FALSE, include=TRUE}
+
+
+```
+
+```{r eval=FALSE, include=TRUE}
+
+
+```
+
+```{r eval=FALSE, include=TRUE}
+
+
+```
+
+```{r eval=FALSE, include=TRUE}
+
+
+```
+
+```{r eval=FALSE, include=TRUE}
+
+
+```
+
+
 
 
 
