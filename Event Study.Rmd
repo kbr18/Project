@@ -1,19 +1,18 @@
-Part 1: Installing Packages
+Step 1: Installing Packages
 
 ```{r eval=FALSE, include=TRUE}
 install.packages("quantmod")
 library(quantmod)
-install.packages("EventStudy")
-library(EventStudy)
-library(dplyr)
+install.packages("devtools")
 devtools::install_github("nipfpmf/eventstudies", ref="master")
+library(dplyr)
 ```
 
-Part 2: Retrieving data using Quantmod for Japanese stocks
+Step 2: Retrieving data using Quantmod for Japanese stocks
 
 ```{r eval=FALSE, include=TRUE}
-startJP <- as.Date("2018-05-09")
-endJP <- as.Date("2018-09-09")
+startJP <- as.Date("2018-05-28")
+endJP <- as.Date("2018-07-28")
 
 symbolBasketJP <- c("6113.T", "3865.T", "7211.T", "9735.T", "3289.T")
 
@@ -35,54 +34,58 @@ Tokyu <- as.xts(`3289.T`)
 names(Tokyu) <- c("Tokyu.Open"   ,  "Tokyu.High"   ,  "Tokyu.Low"   ,   "Tokyu.Close"  ,  "Tokyu.Volume",  "Tokyu.Adjusted")
 ```
 
-Step 3: Merging datasets and extracting close price
+Step 3: Calculate the daily stock return for the Japanese stocks
 
 ```{r eval=FALSE, include=TRUE}
-data<-merge(Amada, Hokuetsu, Mitsubishi, Secom, Tokyu)
-dataJP<-data[,c(4, 10, 16, 22, 28)]
+Amada_Close <- Amada[, "Amada.Close", drop = FALSE]
+Amada_Return <- (diff(Amada_Close)/Amada_Close[-length(Amada_Close)])*100
+names(Amada_Return) <- c("Amada")
+  
+Hokuetsu_Close <- Hokuetsu[, "Hokuetsu.Close", drop = FALSE]
+Hokuetsu_Return <- (diff(Hokuetsu_Close)/Hokuetsu_Close[-length(Hokuetsu_Close)])*100
+names(Hokuetsu_Return) <- c("Hokuetsun")
+
+Mitsubishi_Close <- Mitsubishi[, "Mitsubishi.Close", drop = FALSE]
+Mitsubishi_Return <- (diff(Mitsubishi_Close)/Mitsubishi_Close[-length(Mitsubishi_Close)])*100
+names(Mitsubishi_Return) <- c("Mitsubishi")
+
+Secom_Close <- Secom[, "Secom.Close", drop = FALSE]
+Secom_Return <- (diff(Secom_Close)/Secom_Close[-length(Secom_Close)])*100
+names(Secom_Return) <- c("Secom")
+
+Tokyu_Close <- Tokyu[, "Tokyu.Close", drop = FALSE]
+Tokyu_Return <- (diff(Tokyu_Close)/Tokyu_Close[-length(Tokyu_Close)])*100
+names(Tokyu_Return) <- c("Tokyu")
 ```
 
-Step 4: Calculate the return
+Step 4: Merging all the stock return datasets
 
 ```{r eval=FALSE, include=TRUE}
-StockPriceReturnJP <- read.csv(file="StockPriceReturnJP.csv")
+stockPriceReturnJP<-merge(Amada_Return, Hokuetsu_Return, Mitsubishi_Return, Secom_Return, Tokyu_Return)
 
-dataJP$Amada.Close <- c(NA,diff(log(as.numeric(dataJP$Amada.Close)), lag=1))
-
-dataJP$Hokuetsu.Close <- c(NA,diff(log(as.numeric(dataJP$Hokuetsu.Close)), lag=1))
-
-dataJP$Mitsubishi.Close <- c(NA,diff(log(as.numeric(dataJP$Mitsubishi.Close)), lag=1))
-
-dataJP$Secom.Close <- c(NA,diff(log(as.numeric(dataJP$Secom.Close)), lag=1))
-
-dataJP$Tokyu.Close <- c(NA,diff(log(as.numeric(dataJP$Tokyu.Close)), lag=1))
+View(stockPriceReturnJP)
+str(stockPriceReturnJP)
 ```
 
-Step 5: Convert to zoo
+Step 5: List the assets and the date of the flood
+
 ```{r eval=FALSE, include=TRUE}
-write.zoo(StockPriceReturnJP, file="StockPriceReturnJP.csv")
-?read.zoo
-read.zoo(StockPriceReturnJP, format = "%Y.%m.%d")
+eventDateJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-06-28","2018-06-28","2018-06-28","2018-06-28","2018-06-28"))
 ```
 
-Step 6: List the assets and the date of the event
-```{r eval=FALSE, include=TRUE}
-eventDateJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-09","2018-07-09","2018-07-09","2018-07-09"))
-```
+Step 6: Convert the text
 
-Step 7: Convert the text
 ```{r eval=FALSE, include=TRUE}
 eventDateJP$name<-as.character(eventDateJP$name)
 eventDateJP$when<-as.Date(eventDateJP$when)
 ```
 
-Step 8: EventStudy
+Step 7: Event Study analysis for the Japanese stocks
+
 ```{r eval=FALSE, include=TRUE}
-help(EventStudy)
-?EventStudy
-es <- eventstudies::eventstudy(firm.returns = StockPriceReturnJP,
+esJP <- eventstudies::eventstudy(firm.returns = stockPriceReturnJP,
                                event.list = eventDateJP,
-                               event.window = 7,
+                               event.window = 5,
                                type = "None",
                                to.remap = TRUE,
                                remap = "cumsum",
@@ -91,45 +94,112 @@ es <- eventstudies::eventstudy(firm.returns = StockPriceReturnJP,
                                )
 ```
 
-Step 9: Plot event study 
-```{r eval=FALSE, include=TRUE}
-plot(esJapan) 
-```
-
-Step 10: Results
-```{r eval=FALSE, include=TRUE}
-summary(es.mm)
-```
-
-
-
-
-
-
+Step 8: Plot event study
 
 ```{r eval=FALSE, include=TRUE}
-data("SplitDates", package = "eventstudies")
-SplitDates <- data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-09","2018-07-09","2018-07-09","2018-07-09"))
+plot(esJP)
 ```
 
-
-
-
-
-
+Step 9: Results
 
 ```{r eval=FALSE, include=TRUE}
-install.packages("devtools")
-devtools::install_github("EventStudyTools/api-wrapper.r")
-
-apiUrl <- "http://api.dev.eventstudytools.com"
-apiKey <- "573e58c665fcc08cc6e5a660beaad0cb"
-
-options(apiServerUrl = apiUrl)
-options(eventStudyKey = apiKey)
-
-# initialize object
-estSetup <- EventStudyAPI$new()
+summary(esJP)
 ```
 
+Step 10: Retrieving data using Quantmod for India stocks
 
+```{r eval=FALSE, include=TRUE}
+startIN <- as.Date("2018-07-16")
+endIN <- as.Date("2018-09-16")
+
+symbolBasketIN <- c("TATASTEEL.BO", "TECHM.BO", "BAJAJ-AUTO.BO", "ICICIBANK.BO", "LT.BO")
+
+getSymbols(symbolBasketIN, src='yahoo', from = startIN, to = endIN)
+
+Tata <- as.xts(`TATASTEEL.BO`)
+names(Tata) <- c("Tata.Open"   ,  "Tata.High"   ,  "Tata.Low"   ,   "Tata.Close"  ,  "Tata.Volume",  "Tata.Adjusted")
+
+Mahindra <- as.xts(`TECHM.BO`)
+names(Mahindra) <- c("Mahindra.Open"   ,  "Mahindra.High"   ,  "Mahindra.Low"   ,   "Mahindra.Close"  ,  "Mahindra.Volume",  "Mahindra.Adjusted")
+
+Bajaj <- as.xts(`BAJAJ-AUTO.BO`)
+names(Bajaj) <- c("Bajaj.Open"   ,  "Bajaj.High"   ,  "Bajaj.Low"   ,   "Bajaj.Close"  ,  "Bajaj.Volume",  "Bajaj.Adjusted")
+
+ICICI <- as.xts(`ICICIBANK.BO`)
+names(ICICI) <- c("ICICI.Open"   ,  "ICICI.High"   ,  "ICICI.Low"   ,   "ICICI.Close"  ,  "ICICI.Volume",  "ICICI.Adjusted")
+
+LT <- as.xts(`LT.BO`)
+names(LT) <- c("LT.Open"   ,  "LT.High"   ,  "LT.Low"   ,   "LT.Close"  ,  "LT.Volume",  "LT.Adjusted")
+```
+
+Step 11: Calculate the daily stock return for the Indian stocks
+
+```{r eval=FALSE, include=TRUE}
+Tata_Close <- Tata[, "Tata.Close", drop = FALSE]
+Tata_Return <- (diff(Tata_Close)/Tata_Close[-length(Tata_Close)])*100
+names(Tata_Return) <- c("Tata")
+  
+Mahindra_Close <- Mahindra[, "Mahindra.Close", drop = FALSE]
+Mahindra_Return <- (diff(Mahindra_Close)/Mahindra_Close[-length(Mahindra_Close)])*100
+names(Mahindra_Return) <- c("Mahindran")
+
+Bajaj_Close <- Bajaj[, "Bajaj.Close", drop = FALSE]
+Bajaj_Return <- (diff(Bajaj_Close)/Bajaj_Close[-length(Bajaj_Close)])*100
+names(Bajaj_Return) <- c("Bajaj")
+
+ICICI_Close <- ICICI[, "ICICI.Close", drop = FALSE]
+ICICI_Return <- (diff(ICICI_Close)/ICICI_Close[-length(ICICI_Close)])*100
+names(ICICI_Return) <- c("ICICI")
+
+LT_Close <- LT[, "LT.Close", drop = FALSE]
+LT_Return <- (diff(LT_Close)/LT_Close[-length(LT_Close)])*100
+names(LT_Return) <- c("LT")
+```
+
+Step 12: Merging all the stock return datasets
+
+```{r eval=FALSE, include=TRUE}
+stockPriceReturnIN<-merge(Tata_Return, Mahindra_Return, Bajaj_Return, ICICI_Return, LT_Return)
+
+View(stockPriceReturnIN)
+str(stockPriceReturnIN)
+```
+
+Step 13: List the assets and the date of the flood
+
+```{r eval=FALSE, include=TRUE}
+eventDateIN<-data.frame("name"=c("Tata","Mahindra","Bajaj", "ICICI", "LT"), "when"=c("2018-08-16","2018-08-16","2018-08-16","2018-08-16","2018-08-16"))
+```
+
+Step 14: Convert the text
+
+```{r eval=FALSE, include=TRUE}
+eventDateIN$name<-as.character(eventDateIN$name)
+eventDateIN$when<-as.Date(eventDateIN$when)
+```
+
+Step 15: Event Study analysis for the Indian stocks
+
+```{r eval=FALSE, include=TRUE}
+esIN <- eventstudies::eventstudy(firm.returns = stockPriceReturnIN,
+                               event.list = eventDateIN,
+                               event.window = 5,
+                               type = "None",
+                               to.remap = TRUE,
+                               remap = "cumsum",
+                               inference = TRUE,
+                               inference.strategy = "bootstrap",
+                               )
+```
+
+Step 16: Plot event study
+
+```{r eval=FALSE, include=TRUE}
+plot(esIN)
+```
+
+Step 17: Results
+
+```{r eval=FALSE, include=TRUE}
+summary(esIN)
+```

@@ -6,7 +6,7 @@ endIN <- as.Date("2018-09-16")
 
 symbolBasketIN <- c("TATASTEEL.BO", "TECHM.BO", "BAJAJ-AUTO.BO", "ICICIBANK.BO", "LT.BO")
 
-getSymbols(symbolBasketIN, src='yahoo', from = startJP, to = endJP)
+getSymbols(symbolBasketIN, src='yahoo', from = startIN, to = endIN)
 
 Tata <- as.xts(`TATASTEEL.BO`)
 names(Tata) <- c("Tata.Open"   ,  "Tata.High"   ,  "Tata.Low"   ,   "Tata.Close"  ,  "Tata.Volume",  "Tata.Adjusted")
@@ -24,36 +24,53 @@ LT <- as.xts(`LT.BO`)
 names(LT) <- c("LT.Open"   ,  "LT.High"   ,  "LT.Low"   ,   "LT.Close"  ,  "LT.Volume",  "LT.Adjusted")
 ```
 
-Step 3: Merging datasets and extracting close price
+Step 11: Calculate the return 
 
 ```{r eval=FALSE, include=TRUE}
-data<-merge(Tata, Mahindra, Bajaj, ICICI, LT)
-dataIN<-data[,c(4, 10, 16, 22, 28)]
+Tata_Close <- Tata[, "Tata.Close", drop = FALSE]
+Tata_Return <- (diff(Tata_Close)/Tata_Close[-length(Tata_Close)])*100
+names(Tata_Return) <- c("Tata")
+  
+Mahindra_Close <- Mahindra[, "Mahindra.Close", drop = FALSE]
+Mahindra_Return <- (diff(Mahindra_Close)/Mahindra_Close[-length(Mahindra_Close)])*100
+names(Mahindra_Return) <- c("Mahindran")
+
+Bajaj_Close <- Bajaj[, "Bajaj.Close", drop = FALSE]
+Bajaj_Return <- (diff(Bajaj_Close)/Bajaj_Close[-length(Bajaj_Close)])*100
+names(Bajaj_Return) <- c("Bajaj")
+
+ICICI_Close <- ICICI[, "ICICI.Close", drop = FALSE]
+ICICI_Return <- (diff(ICICI_Close)/ICICI_Close[-length(ICICI_Close)])*100
+names(ICICI_Return) <- c("ICICI")
+
+LT_Close <- LT[, "LT.Close", drop = FALSE]
+LT_Return <- (diff(LT_Close)/LT_Close[-length(LT_Close)])*100
+names(LT_Return) <- c("LT")
 ```
 
-Step 4: Calculate the return
+Step 12: Merging datasets
 
 ```{r eval=FALSE, include=TRUE}
-returnIN <- read.csv(file=".csv")
+stockPriceReturnIN<-merge(Tata_Return, Mahindra_Return, Bajaj_Return, ICICI_Return, LT_Return)
 
-stockPriceReturnIN <- read.zoo(returnIN, header=T, sep=",")
+View(stockPriceReturnIN)
 str(stockPriceReturnIN)
 ```
 
-Step 5: List the assets and the date of the event
+Step 13: List the assets and the date of the event
 
 ```{r eval=FALSE, include=TRUE}
-eventDateIN<-data.frame("name"=c("Tata", "Mahindra", "Bajaj", "ICICI", "LT"), "when"=c("2018-08-16","2018-08-16","2018-08-16","2018-08-16","2018-08-16"))
+eventDateIN<-data.frame("name"=c("Tata","Mahindra","Bajaj", "ICICI", "LT"), "when"=c("2018-08-16","2018-08-16","2018-08-16","2018-08-16","2018-08-16"))
 ```
 
-Step 6: Convert the text
+Step 14: Convert the text
 
 ```{r eval=FALSE, include=TRUE}
 eventDateIN$name<-as.character(eventDateIN$name)
 eventDateIN$when<-as.Date(eventDateIN$when)
 ```
 
-Step 7: Event Study
+Step 15: Event Study
 
 ```{r eval=FALSE, include=TRUE}
 esIN <- eventstudies::eventstudy(firm.returns = stockPriceReturnIN,
@@ -67,13 +84,13 @@ esIN <- eventstudies::eventstudy(firm.returns = stockPriceReturnIN,
                                )
 ```
 
-Step 8: Plot event study
+Step 16: Plot event study
 
 ```{r eval=FALSE, include=TRUE}
 plot(esIN)
 ```
 
-Step 9: Results
+Step 17: Results
 
 ```{r eval=FALSE, include=TRUE}
 summary(esIN)
