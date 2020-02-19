@@ -103,6 +103,8 @@ plot(esJP)
 Step 9: Results
 
 ```{r eval=FALSE, include=TRUE}
+class(esJP)
+str(esJP)
 summary(esJP)
 ```
 
@@ -201,5 +203,7 @@ plot(esIN)
 Step 17: Results
 
 ```{r eval=FALSE, include=TRUE}
+class(esIN)
+str(esIN)
 summary(esIN)
 ```
