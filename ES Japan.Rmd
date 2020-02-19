@@ -3,6 +3,7 @@ Step 1: Installing Packages
 ```{r eval=FALSE, include=TRUE}
 install.packages("quantmod")
 library(quantmod)
+install.packages("devtools")
 devtools::install_github("nipfpmf/eventstudies", ref="master")
 library(dplyr)
 ```
@@ -52,24 +53,23 @@ str(stockPriceReturnJP)
 Step 5: List the assets and the date of the event
 
 ```{r eval=FALSE, include=TRUE}
-eventDateJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-19","2018-07-20","2018-07-10","2018-07-09"))
+eventDateJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-06-28","2018-06-28","2018-06-28","2018-06-28","2018-06-28"))
 ```
 
 Step 7: Convert the text
 ```{r eval=FALSE, include=TRUE}
 eventDateJP$name<-as.character(eventDateJP$name)
-eventDateJP$when<-as.character(eventDateJP$when)
+eventDateJP$when<-as.Date(eventDateJP$when)
 ```
-
 
 head(returnJP)
 
 Step 6: Event Study
 
 ```{r eval=FALSE, include=TRUE}
-esJP <- eventstudies::eventstudy(firm.returns = StockPriceReturnJP,
+esJP <- eventstudies::eventstudy(firm.returns = stockPriceReturnJP,
                                event.list = eventDateJP,
-                               event.window = 10,
+                               event.window = 5,
                                type = "None",
                                to.remap = TRUE,
                                remap = "cumsum",
@@ -77,6 +77,18 @@ esJP <- eventstudies::eventstudy(firm.returns = StockPriceReturnJP,
                                inference.strategy = "bootstrap",
                                )
 ```
+
+
+Step 9: Plot event study 
+```{r eval=FALSE, include=TRUE}
+plot(esJP)
+```
+
+Step 10: Results
+```{r eval=FALSE, include=TRUE}
+summary(es.mm)
+```
+
 
 ```{r eval=FALSE, include=TRUE}
 
