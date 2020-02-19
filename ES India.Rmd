@@ -28,7 +28,7 @@ Step 3: Merging datasets and extracting close price
 
 ```{r eval=FALSE, include=TRUE}
 data<-merge(Tata, Mahindra, Bajaj, ICICI, LT)
-dataJP<-data[,c(4, 10, 16, 22, 28)]
+dataIN<-data[,c(4, 10, 16, 22, 28)]
 ```
 
 Step 4: Calculate the return
