@@ -1,0 +1,80 @@
+Step 10: Retrieving data using Quantmod for India stocks
+
+```{r eval=FALSE, include=TRUE}
+startIN <- as.Date("2018-07-16")
+endIN <- as.Date("2018-09-16")
+
+symbolBasketIN <- c("TATASTEEL.BO", "TECHM.BO", "BAJAJ-AUTO.BO", "ICICIBANK.BO", "LT.BO")
+
+getSymbols(symbolBasketIN, src='yahoo', from = startJP, to = endJP)
+
+Tata <- as.xts(`TATASTEEL.BO`)
+names(Tata) <- c("Tata.Open"   ,  "Tata.High"   ,  "Tata.Low"   ,   "Tata.Close"  ,  "Tata.Volume",  "Tata.Adjusted")
+
+Mahindra <- as.xts(`TECHM.BO`)
+names(Mahindra) <- c("Mahindra.Open"   ,  "Mahindra.High"   ,  "Mahindra.Low"   ,   "Mahindra.Close"  ,  "Mahindra.Volume",  "Mahindra.Adjusted")
+
+Bajaj <- as.xts(`BAJAJ-AUTO.BO`)
+names(Bajaj) <- c("Bajaj.Open"   ,  "Bajaj.High"   ,  "Bajaj.Low"   ,   "Bajaj.Close"  ,  "Bajaj.Volume",  "Bajaj.Adjusted")
+
+ICICI <- as.xts(`ICICIBANK.BO`)
+names(ICICI) <- c("ICICI.Open"   ,  "ICICI.High"   ,  "ICICI.Low"   ,   "ICICI.Close"  ,  "ICICI.Volume",  "ICICI.Adjusted")
+
+LT <- as.xts(`LT.BO`)
+names(LT) <- c("LT.Open"   ,  "LT.High"   ,  "LT.Low"   ,   "LT.Close"  ,  "LT.Volume",  "LT.Adjusted")
+```
+
+Step 3: Merging datasets and extracting close price
+
+```{r eval=FALSE, include=TRUE}
+data<-merge(Tata, Mahindra, Bajaj, ICICI, LT)
+dataJP<-data[,c(4, 10, 16, 22, 28)]
+```
+
+Step 4: Calculate the return
+
+```{r eval=FALSE, include=TRUE}
+returnIN <- read.csv(file=".csv")
+
+stockPriceReturnIN <- read.zoo(returnIN, header=T, sep=",")
+str(stockPriceReturnIN)
+```
+
+Step 5: List the assets and the date of the event
+
+```{r eval=FALSE, include=TRUE}
+eventDateIN<-data.frame("name"=c("Tata", "Mahindra", "Bajaj", "ICICI", "LT"), "when"=c("2018-08-16","2018-08-16","2018-08-16","2018-08-16","2018-08-16"))
+```
+
+Step 6: Convert the text
+
+```{r eval=FALSE, include=TRUE}
+eventDateIN$name<-as.character(eventDateIN$name)
+eventDateIN$when<-as.Date(eventDateIN$when)
+```
+
+Step 7: Event Study
+
+```{r eval=FALSE, include=TRUE}
+esIN <- eventstudies::eventstudy(firm.returns = stockPriceReturnIN,
+                               event.list = eventDateIN,
+                               event.window = 5,
+                               type = "None",
+                               to.remap = TRUE,
+                               remap = "cumsum",
+                               inference = TRUE,
+                               inference.strategy = "bootstrap",
+                               )
+```
+
+Step 8: Plot event study
+
+```{r eval=FALSE, include=TRUE}
+plot(esIN)
+```
+
+Step 9: Results
+
+```{r eval=FALSE, include=TRUE}
+summary(esIN)
+```

@@ -34,49 +34,21 @@ Tokyu <- as.xts(`3289.T`)
 names(Tokyu) <- c("Tokyu.Open"   ,  "Tokyu.High"   ,  "Tokyu.Low"   ,   "Tokyu.Close"  ,  "Tokyu.Volume",  "Tokyu.Adjusted")
 ```
 
-Step 3: Calculate the return 
+Step 3: Merging datasets and extracting close price
 
 ```{r eval=FALSE, include=TRUE}
-Amada_Close <- Amada[, "Amada.Close", drop = FALSE]
-Amada_Return <- (diff(Amada_Close)/Amada_Close[-length(Amada_Close)])*100
-names(Amada_Return) <- c("Amada.Return")
-  
-Hokuetsu_Close <- Hokuetsu[, "Hokuetsu.Close", drop = FALSE]
-Hokuetsu_Return <- (diff(Hokuetsu_Close)/Hokuetsu_Close[-length(Hokuetsu_Close)])*100
-names(Hokuetsu_Return) <- c("Hokuetsu.Return")
-
-Mitsubishi_Close <- Mitsubishi[, "Mitsubishi.Close", drop = FALSE]
-Mitsubishi_Return <- (diff(Mitsubishi_Close)/Mitsubishi_Close[-length(Mitsubishi_Close)])*100
-names(Mitsubishi_Return) <- c("Mitsubishi.Return")
-
-Secom_Close <- Secom[, "Secom.Close", drop = FALSE]
-Secom_Return <- (diff(Secom_Close)/Secom_Close[-length(Secom_Close)])*100
-names(Secom_Return) <- c("Secom.Return")
-
-Tokyu_Close <- Tokyu[, "Tokyu.Close", drop = FALSE]
-Tokyu_Return <- (diff(Tokyu_Close)/Tokyu_Close[-length(Tokyu_Close)])*100
-names(Tokyu_Return) <- c("Tokyu.Return")
+data<-merge(Amada, Hokuetsu, Mitsubishi, Secom, Tokyu)
+dataJP<-data[,c(4, 10, 16, 22, 28)]
 ```
 
-Step 4: Merging datasets
+Step 4: Calculate the return
 
 ```{r eval=FALSE, include=TRUE}
-dataJP<-merge(Amada_Return, Hokuetsu_Return, Mitsubishi_Return, Secom_Return, Tokyu_Return)
+returnJP <- read.csv(file="ReturnsJP.csv")
 
-dataJP1<-data.frame(dataJP)
-dataJP1 <- cbind(Date = rownames(dataJP1), dataJP1)
-rownames(dataJP1) <- 1:nrow(dataJP1)
-
-stockPriceReturnJP <- zoo(dataJP1)
-
-as.Date(stockPriceReturnJP$Date)
-
-type.convert(stockPriceReturnJP$Date)
-View(stockPriceReturnJP)
-
+stockPriceReturnJP <- read.zoo(returnJP, header=T, sep=",")
+str(stockPriceReturnJP)
 ```
-
-?type.convert
 
 Step 5: List the assets and the date of the event
 
