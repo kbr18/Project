@@ -5,7 +5,6 @@ install.packages("quantmod")
 library(quantmod)
 devtools::install_github("nipfpmf/eventstudies", ref="master")
 library(dplyr)
-install.packages("phys2eventtime")
 ```
 
 Step 2: Retrieving data using Quantmod for Japanese stocks
@@ -53,13 +52,13 @@ str(stockPriceReturnJP)
 Step 5: List the assets and the date of the event
 
 ```{r eval=FALSE, include=TRUE}
-eventDateJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-09","2018-07-09","2018-07-09","2018-07-09"))
+eventDateJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-19","2018-07-20","2018-07-10","2018-07-09"))
 ```
 
 Step 7: Convert the text
 ```{r eval=FALSE, include=TRUE}
 eventDateJP$name<-as.character(eventDateJP$name)
-eventDateJP$when<-as.Date(eventDateJP$when)
+eventDateJP$when<-as.character(eventDateJP$when)
 ```
 
 
@@ -68,8 +67,6 @@ head(returnJP)
 Step 6: Event Study
 
 ```{r eval=FALSE, include=TRUE}
-results <- phys2eventtime(z=StockPriceReturnJP$Index.Date.Amada.Hokuetsu.Mitsubishi.Secom.Tokyu, events=eventDateJP[i, any(class(StockPriceReturnJP) %in% "zoo")], width = 10)
-
 esJP <- eventstudies::eventstudy(firm.returns = StockPriceReturnJP,
                                event.list = eventDateJP,
                                event.window = 10,
@@ -81,5 +78,8 @@ esJP <- eventstudies::eventstudy(firm.returns = StockPriceReturnJP,
                                )
 ```
 
+```{r eval=FALSE, include=TRUE}
 
 
+
+```
