@@ -19,7 +19,7 @@ install.packages("timeSeries")
 library(timeSeries)
 install.packages("fGarch")
 library(fGarch)
-if(!require(prophet)) install.packages("prophet")
+install.packages("prophet")
 library(prophet)
 ```
 
