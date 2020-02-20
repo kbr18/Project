@@ -1,5 +1,13 @@
 #FORECAST COMBINE
 
+
+
+##JAPAN
+
+
+
+
+
 data<-merge(Tata,Mahindra, Bajaj, ICICI, LT)
 dataIN <-data[,c(4, 10, 16, 22, 28)]              
 
@@ -113,7 +121,7 @@ lambda <- BoxCox.lambda(ForecastAVGJP)
 dnn_pred <- nnetar(ForecastAVGJP, size= hn, lambda = lambda)
 
 #Fitting nnetar
-dnn_forecast <- forecast(dnn_pred, h= 30, PI = TRUE)
+dnn_forecast <- forecast(dnn_pred, h= 30, PI= TRUE)
 
 plot(dnn_forecast)
 
