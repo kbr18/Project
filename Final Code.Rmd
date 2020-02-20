@@ -1,0 +1,331 @@
+Installing Packages
+
+```{r eval=FALSE, include=TRUE}
+install.packages("quantmod")
+library(quantmod)
+install.packages("devtools")
+devtools::install_github("nipfpmf/eventstudies", ref="master")
+install.packages("dplyr")
+library(dplyr)
+install.packages("rugarch")
+library(rugarch)
+install.packages("forecast")
+library(forecast)
+install.packages("xlsx")
+library("xlsx")
+install.packages("tseries")
+library(tseries)
+install.packages("timeSeries")
+library(timeSeries)
+install.packages("fGarch")
+library(fGarch)
+if(!require(prophet)) install.packages("prophet")
+library(prophet)
+```
+
+EVENT STUDY
+
+Step 1: Retrieving data using Quantmod for Japanese stocks
+
+```{r eval=FALSE, include=TRUE}
+startJP <- as.Date("2018-05-28")
+endJP <- as.Date("2018-07-28")
+
+symbolBasketJP <- c("6113.T", "3865.T", "7211.T", "9735.T", "3289.T")
+
+getSymbols(symbolBasketJP , src='yahoo', from = startJP, to = endJP)
+
+Amada <- as.xts(`6113.T`)
+names(Amada) <- c("Amada.Open"   ,  "Amada.High"   ,  "Amada.Low"   ,   "Amada.Close"  , "Amada.Volume",  "Amada.Adjusted")
+
+Hokuetsu <- as.xts(`3865.T`)
+names(Hokuetsu) <- c("Hokuetsu.Open"   ,  "Hokuetsu.High"   ,  "Hokuetsu.Low"   ,   "Hokuetsu.Close"  ,  "Hokuetsu.Volume",  "Hokuetsu.Adjusted")
+
+Mitsubishi <- as.xts(`7211.T`)
+names(Mitsubishi) <- c("Mitsubishi.Open"   ,  "Mitsubishi.High"   ,  "Mitsubishi.Low"   ,   "Mitsubishi.Close"  ,  "Mitsubishi.Volume",  "Mitsubishi.Adjusted")
+
+Secom <- as.xts(`9735.T`)
+names(Secom) <- c("Secom.Open"   ,  "Secom.High"   ,  "Secom.Low"   ,   "Secom.Close"  ,  "Secom.Volume",  "Secom.Adjusted")
+
+Tokyu <- as.xts(`3289.T`)
+names(Tokyu) <- c("Tokyu.Open"   ,  "Tokyu.High"   ,  "Tokyu.Low"   ,   "Tokyu.Close"  ,  "Tokyu.Volume",  "Tokyu.Adjusted")
+```
+
+Step 2: Calculate the daily stock return for the Japanese stocks
+
+```{r eval=FALSE, include=TRUE}
+AmadaClose <- Amada[, "Amada.Close", drop = FALSE]
+Amada_Return <- (diff(AmadaClose)/AmadaClose[-length(AmadaClose)])*100
+names(Amada_Return) <- c("Amada")
+  
+HokuetsuClose <- Hokuetsu[, "Hokuetsu.Close", drop = FALSE]
+Hokuetsu_Return <- (diff(HokuetsuClose)/HokuetsuClose[-length(HokuetsuClose)])*100
+names(Hokuetsu_Return) <- c("Hokuetsun")
+
+MitsubishiClose <- Mitsubishi[, "Mitsubishi.Close", drop = FALSE]
+Mitsubishi_Return <- (diff(MitsubishiClose)/MitsubishiClose[-length(MitsubishiClose)])*100
+names(Mitsubishi_Return) <- c("Mitsubishi")
+
+SecomClose <- Secom[, "Secom.Close", drop = FALSE]
+Secom_Return <- (diff(SecomClose)/SecomClose[-length(SecomClose)])*100
+names(Secom_Return) <- c("Secom")
+
+TokyuClose <- Tokyu[, "Tokyu.Close", drop = FALSE]
+Tokyu_Return <- (diff(TokyuClose)/TokyuClose[-length(TokyuClose)])*100
+names(Tokyu_Return) <- c("Tokyu")
+```
+
+Step 3: Merging all the stock return datasets
+
+```{r eval=FALSE, include=TRUE}
+stockPriceReturnJP<-merge(Amada_Return, Hokuetsu_Return, Mitsubishi_Return, Secom_Return, Tokyu_Return)
+
+View(stockPriceReturnJP)
+str(stockPriceReturnJP)
+```
+
+Step 4: List the assets and the date of the flood
+
+```{r eval=FALSE, include=TRUE}
+eventDateJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-06-28","2018-06-28","2018-06-28","2018-06-28","2018-06-28"))
+```
+
+Step 5: Convert the text
+
+```{r eval=FALSE, include=TRUE}
+eventDateJP$name<-as.character(eventDateJP$name)
+eventDateJP$when<-as.Date(eventDateJP$when)
+```
+
+Step 6: Event Study analysis for the Japanese stocks
+
+```{r eval=FALSE, include=TRUE}
+esJP <- eventstudies::eventstudy(firm.returns = stockPriceReturnJP,
+                               event.list = eventDateJP,
+                               event.window = 5,
+                               type = "None",
+                               to.remap = TRUE,
+                               remap = "cumsum",
+                               inference = TRUE,
+                               inference.strategy = "bootstrap",
+                               )
+```
+
+Step 7: Plot event study
+
+```{r eval=FALSE, include=TRUE}
+plot(esJP)
+title(main="Japan Stock Cumulative Abnormal Return")
+```
+
+Step 8: Japan Flood Results
+
+```{r eval=FALSE, include=TRUE}
+class(esJP)
+str(esJP)
+summary(esJP)
+```
+
+Step 9: Retrieving data using Quantmod for India stocks
+
+```{r eval=FALSE, include=TRUE}
+startIN <- as.Date("2018-07-16")
+endIN <- as.Date("2018-09-16")
+
+symbolBasketIN <- c("TATASTEEL.BO", "TECHM.BO", "BAJAJ-AUTO.BO", "ICICIBANK.BO", "LT.BO")
+
+getSymbols(symbolBasketIN, src='yahoo', from = startIN, to = endIN)
+
+Tata <- as.xts(`TATASTEEL.BO`)
+names(Tata) <- c("Tata.Open"   ,  "Tata.High"   ,  "Tata.Low"   ,   "Tata.Close"  ,  "Tata.Volume",  "Tata.Adjusted")
+
+Mahindra <- as.xts(`TECHM.BO`)
+names(Mahindra) <- c("Mahindra.Open"   ,  "Mahindra.High"   ,  "Mahindra.Low"   ,   "Mahindra.Close"  ,  "Mahindra.Volume",  "Mahindra.Adjusted")
+
+Bajaj <- as.xts(`BAJAJ-AUTO.BO`)
+names(Bajaj) <- c("Bajaj.Open"   ,  "Bajaj.High"   ,  "Bajaj.Low"   ,   "Bajaj.Close"  ,  "Bajaj.Volume",  "Bajaj.Adjusted")
+
+ICICI <- as.xts(`ICICIBANK.BO`)
+names(ICICI) <- c("ICICI.Open"   ,  "ICICI.High"   ,  "ICICI.Low"   ,   "ICICI.Close"  ,  "ICICI.Volume",  "ICICI.Adjusted")
+
+LT <- as.xts(`LT.BO`)
+names(LT) <- c("LT.Open"   ,  "LT.High"   ,  "LT.Low"   ,   "LT.Close"  ,  "LT.Volume",  "LT.Adjusted")
+```
+
+Step 10: Calculate the daily stock return for the Indian stocks
+
+```{r eval=FALSE, include=TRUE}
+TataClose <- Tata[, "Tata.Close", drop = FALSE]
+Tata_Return <- (diff(TataClose)/TataClose[-length(TataClose)])*100
+names(Tata_Return) <- c("Tata")
+  
+MahindraClose <- Mahindra[, "Mahindra.Close", drop = FALSE]
+Mahindra_Return <- (diff(MahindraClose)/MahindraClose[-length(MahindraClose)])*100
+names(Mahindra_Return) <- c("Mahindran")
+
+BajajClose <- Bajaj[, "Bajaj.Close", drop = FALSE]
+Bajaj_Return <- (diff(BajajClose)/BajajClose[-length(BajajClose)])*100
+names(Bajaj_Return) <- c("Bajaj")
+
+ICICIClose <- ICICI[, "ICICI.Close", drop = FALSE]
+ICICI_Return <- (diff(ICICIClose)/ICICIClose[-length(ICICIClose)])*100
+names(ICICI_Return) <- c("ICICI")
+
+LTClose <- LT[, "LT.Close", drop = FALSE]
+LT_Return <- (diff(LTClose)/LTClose[-length(LTClose)])*100
+names(LT_Return) <- c("LT")
+```
+
+Step 11: Merging all the stock return datasets
+
+```{r eval=FALSE, include=TRUE}
+stockPriceReturnIN<-merge(Tata_Return, Mahindra_Return, Bajaj_Return, ICICI_Return, LT_Return)
+
+View(stockPriceReturnIN)
+str(stockPriceReturnIN)
+```
+
+Step 12: List the assets and the date of the flood
+
+```{r eval=FALSE, include=TRUE}
+eventDateIN<-data.frame("name"=c("Tata","Mahindra","Bajaj", "ICICI", "LT"), "when"=c("2018-08-16","2018-08-16","2018-08-16","2018-08-16","2018-08-16"))
+```
+
+Step 13: Convert the text
+
+```{r eval=FALSE, include=TRUE}
+eventDateIN$name<-as.character(eventDateIN$name)
+eventDateIN$when<-as.Date(eventDateIN$when)
+```
+
+Step 14: Event Study analysis for the Indian stocks
+
+```{r eval=FALSE, include=TRUE}
+esIN <- eventstudies::eventstudy(firm.returns = stockPriceReturnIN,
+                               event.list = eventDateIN,
+                               event.window = 5,
+                               type = "None",
+                               to.remap = TRUE,
+                               remap = "cumsum",
+                               inference = TRUE,
+                               inference.strategy = "bootstrap",
+                               )
+```
+
+Step 15: Plot event study
+
+```{r eval=FALSE, include=TRUE}
+plot(esIN)
+title(main="India Stock Cumulative Abnormal Return")
+```
+
+Step 16: India Flood Results
+
+```{r eval=FALSE, include=TRUE}
+class(esIN)
+str(esIN)
+summary(esIN)
+```
+
+
+PRICE FORECAST
+
+Step 1: Recollect Closing Price for Japanese Stocks
+
+```{r eval=FALSE, include=TRUE}
+AmadaClose
+HokuetsuClose
+MitsubishiClose
+SecomClose
+TokyuClose
+```
+
+Step 2: Calculating the weighted average price of the 5 Japanese stocks
+
+```{r eval=FALSE, include=TRUE}
+ForecastAVGJP <- AmadaClose^2*(1/(AmadaClose+HokuetsuClose+MitsubishiClose+SecomClose+TokyuClose))
++HokuetsuClose^2*(1/(AmadaClose+HokuetsuClose+MitsubishiClose+SecomClose+TokyuClose))
++MitsubishiClose^2*(1/(AmadaClose+HokuetsuClose+MitsubishiClose+SecomClose+TokyuClose))
++SecomClose^2*(1/(AmadaClose+HokuetsuClose+MitsubishiClose+SecomClose+TokyuClose))
++TokyuClose^2*(1/(AmadaClose+HokuetsuClose+MitsubishiClose+SecomClose+TokyuClose))
+```
+
+Step 3: Plot the weighted average price of the 5 Japanese stocks
+
+```{r eval=FALSE, include=TRUE}
+plot(ForecastAVGJP)
+```
+
+Feed Foward Neural network
+
+Step 4: Hidden layers creation
+
+```{r eval=FALSE, include=TRUE}
+alphaJP <- 1.5^(-10)
+hnJP <- length(ForecastAVGJP)/(alphaJP*(length(ForecastAVGJP)+30))
+```
+
+Step 5: Fitting nnetar
+
+```{r eval=FALSE, include=TRUE}
+lambdaJP <- BoxCox.lambda(ForecastAVGJP)
+dnn_predJP <- nnetar(ForecastAVGJP, size= hnJP, lambda = lambdaJP)
+dnn_forecastJP <- forecast(dnn_predJP, h= 30)
+```
+
+Step 6: Plot Fitting nnetar
+
+```{r eval=FALSE, include=TRUE}
+plot(dnn_forecastJP)
+```
+
+Step 7: Recollect Closing Price for Indian Stocks
+
+```{r eval=FALSE, include=TRUE}
+TataClose
+MahindraClose
+BajajClose
+ICICIClose
+LTClose
+```
+
+Step 8: Calculating the weighted average price of the 5 Japanese stocks
+
+```{r eval=FALSE, include=TRUE}
+ForecastAVGIN <- TataClose^2*(1/(TataClose+MahindraClose+BajajClose+ICICIClose+LTClose))
++MahindraClose^2*(1/(TataClose+MahindraClose+BajajClose+ICICIClose+LTClose))
++BajajClose^2*(1/(TataClose+MahindraClose+BajajClose+ICICIClose+LTClose))
++ICICIClose^2*(1/(TataClose+MahindraClose+BajajClose+ICICIClose+LTClose))
++LTClose^2*(1/(TataClose+MahindraClose+BajajClose+ICICIClose+LTClose))
+```
+
+Step 9: Plot the weighted average price of the 5 Indian stocks
+
+```{r eval=FALSE, include=TRUE}
+plot(ForecastAVGIN)
+```
+
+Feed Foward Neural network
+
+Step 10: Hidden layers creation
+
+```{r eval=FALSE, include=TRUE}
+alphaIN <- 1.5^(-10)
+hnIN <- length(ForecastAVGIN)/(alphaIN*(length(ForecastAVGIN)+30))
+```
+
+Step 11: Fitting nnetar
+
+```{r eval=FALSE, include=TRUE}
+lambdaIN <- BoxCox.lambda(ForecastAVGJP)
+dnn_predIN <- nnetar(ForecastAVGJP, size= hnIN, lambda = lambdaIN)
+dnn_forecastIN <- forecast(dnn_predIN, h= 30)
+```
+
+Step 12: Plot Fitting nnetar
+
+```{r eval=FALSE, include=TRUE}
+plot(dnn_forecastIN)
+```
+
+
