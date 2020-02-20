@@ -256,7 +256,7 @@ Step 3: Plot the weighted average price of the 5 Japanese stocks
 plot(ForecastAVGJP)
 ```
 
-Feed Foward Neural network
+Feed Forward Neural network
 
 Step 4: Hidden layers creation
 
@@ -305,7 +305,7 @@ Step 9: Plot the weighted average price of the 5 Indian stocks
 plot(ForecastAVGIN)
 ```
 
-Feed Foward Neural network
+Feed Forward Neural network
 
 Step 10: Hidden layers creation
 
