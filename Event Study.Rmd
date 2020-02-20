@@ -100,7 +100,7 @@ Step 8: Plot event study
 plot(esJP)
 ```
 
-Step 9: Results
+Step 9: Japan Flood Results
 
 ```{r eval=FALSE, include=TRUE}
 class(esJP)
@@ -200,10 +200,28 @@ Step 16: Plot event study
 plot(esIN)
 ```
 
-Step 17: Results
+Step 17: India Flood Results
 
 ```{r eval=FALSE, include=TRUE}
 class(esIN)
 str(esIN)
 summary(esIN)
 ```
+
+Step 18: Market Data for Japan
+```{r eval=FALSE, include=TRUE}
+JPMKT <- read.csv("JP MKT.csv")
+
+JPMKT$Return <- ((JPMKT$Close-JPMKT$Open)/JPMKT$Open)*100
+
+marketReturnJP<-JPMKT[,c(1, 8)]
+marketReturnJP <- read.zoo(marketReturnJP, drop=FALSE)
+View(marketReturnJP)
+str(marketReturnJP)
+```
+
+Step 19: Market Model for Japan floods
+
+Step 20: Plot Market Model for Japan floods
+
+Step 21: Results for Market Model for Japan floods

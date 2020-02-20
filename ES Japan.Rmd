@@ -105,3 +105,42 @@ Step 9: Results
 ```{r eval=FALSE, include=TRUE}
 summary(esJP)
 ```
+
+
+
+Market Model
+
+```{r eval=FALSE, include=TRUE}
+JPMKT <- read.csv("JP MKT.csv")
+
+JPMKT$Return <- ((JPMKT$Close-JPMKT$Open)/JPMKT$Open)*100
+
+marketReturnJP<-JPMKT[,c(1, 8)]
+marketReturnJP <- read.zoo(marketReturnJP, drop=FALSE)
+View(marketReturnJP)
+str(marketReturnJP)
+
+stockPriceReturnJP1 <- stockPriceReturnJP[2:44]
+```
+
+```{r eval=FALSE, include=TRUE}
+esJP.mm <- eventstudies::eventstudy(firm.returns = stockPriceReturnJP1,
+                                    event.list = eventDateJP,
+                                    event.window = 5,
+                                    type = "marketModel",
+                                    to.remap = TRUE,
+                                    remap = "cumsum",
+                                    inference = TRUE,
+                                    inference.strategy = "bootstrap",
+                                    model.args = list(market.returns=marketReturnJP)
+                                    )
+```
+
+
+
+
+
+
+
+plot(esJP.mm)
+

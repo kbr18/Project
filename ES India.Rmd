@@ -95,3 +95,40 @@ Step 17: Results
 ```{r eval=FALSE, include=TRUE}
 summary(esIN)
 ```
+
+
+
+Market Model
+
+```{r eval=FALSE, include=TRUE}
+INMKT <- read.csv("IN MKT.csv")
+
+INMKT$Return <- ((INMKT$Close-INMKT$Open)/INMKT$Open)*100
+
+marketReturnIN<-INMKT[,c(1, 8)]
+marketReturnIN <- read.zoo(marketReturnIN, drop=FALSE)
+View(marketReturnIN)
+str(marketReturnIN)
+
+marketReturnIN1 <- marketReturnIN[2:41]
+stockPriceReturnIN1 <- stockPriceReturnIN[2:41]
+str(marketReturnIN1)
+```
+
+```{r eval=FALSE, include=TRUE}
+esIN.mm <- eventstudies::eventstudy(firm.returns = stockPriceReturnIN,
+                                    event.list = eventDateIN,
+                                    event.window = 5,
+                                    type = "marketModel",
+                                    to.remap = TRUE,
+                                    remap = "cumsum",
+                                    inference = TRUE,
+                                    inference.strategy = "bootstrap",
+                                    model.args = list(market.returns=marketReturnIN1)
+                                    )
+
+                                    
+```
+
+
+
