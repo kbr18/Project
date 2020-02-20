@@ -1,0 +1,87 @@
+Step 1: Installing Packages
+
+```{r eval=FALSE, include=TRUE}
+install.packages("quantmod")
+library(quantmod)
+devtools::install_github("nipfpmf/eventstudies", ref="master")
+library(dplyr)
+```
+
+Step 2: Retrieving data using Quantmod for Japanese stocks
+
+```{r eval=FALSE, include=TRUE}
+startJP <- as.Date("2018-05-09")
+endJP <- as.Date("2018-09-09")
+
+symbolBasketJP <- c("6113.T", "3865.T", "7211.T", "9735.T", "3289.T")
+
+getSymbols(symbolBasketJP , src='yahoo', from = startJP, to = endJP)
+
+Amada <- as.xts(`6113.T`)
+names(Amada) <- c("Amada.Open"   ,  "Amada.High"   ,  "Amada.Low"   ,   "Amada.Close"  , "Amada.Volume",  "Amada.Adjusted")
+
+Hokuetsu <- as.xts(`3865.T`)
+names(Hokuetsu) <- c("Hokuetsu.Open"   ,  "Hokuetsu.High"   ,  "Hokuetsu.Low"   ,   "Hokuetsu.Close"  ,  "Hokuetsu.Volume",  "Hokuetsu.Adjusted")
+
+Mitsubishi <- as.xts(`7211.T`)
+names(Mitsubishi) <- c("Mitsubishi.Open"   ,  "Mitsubishi.High"   ,  "Mitsubishi.Low"   ,   "Mitsubishi.Close"  ,  "Mitsubishi.Volume",  "Mitsubishi.Adjusted")
+
+Secom <- as.xts(`9735.T`)
+names(Secom) <- c("Secom.Open"   ,  "Secom.High"   ,  "Secom.Low"   ,   "Secom.Close"  ,  "Secom.Volume",  "Secom.Adjusted")
+
+Tokyu <- as.xts(`3289.T`)
+names(Tokyu) <- c("Tokyu.Open"   ,  "Tokyu.High"   ,  "Tokyu.Low"   ,   "Tokyu.Close"  ,  "Tokyu.Volume",  "Tokyu.Adjusted")
+```
+
+Step 3: Merging datasets and extracting close price
+
+```{r eval=FALSE, include=TRUE}
+data<-merge(Amada, Hokuetsu, Mitsubishi, Secom, Tokyu)
+dataJP<-data[,c(4, 10, 16, 22, 28)]
+View(dataJP)
+```
+
+Step 4: Calculate the return
+
+```{r eval=FALSE, include=TRUE}
+returnJP <- read.csv(file="ReturnsJP.csv")
+
+stockPriceReturnJP <- read.zoo(returnJP, header=T, sep=",")
+str(stockPriceReturnJP)
+?read.zoo
+```
+
+Step 5: List the assets and the date of the event
+
+```{r eval=FALSE, include=TRUE}
+eventDateJP<-data.frame("name"=c("Amada","Hokuetsu","Mitsubishi", "Secom", "Tokyu"), "when"=c("2018-07-09","2018-07-19","2018-07-20","2018-07-10","2018-07-09"))
+```
+
+Step 7: Convert the text
+```{r eval=FALSE, include=TRUE}
+eventDateJP$name<-as.character(eventDateJP$name)
+eventDateJP$when<-as.character(eventDateJP$when)
+```
+
+
+head(returnJP)
+
+Step 6: Event Study
+
+```{r eval=FALSE, include=TRUE}
+esJP <- eventstudies::eventstudy(firm.returns = StockPriceReturnJP,
+                                 event.list = eventDateJP,
+                                 event.window = 10,
+                                 type = "None",
+                                 to.remap = TRUE,
+                                 remap = "cumsum",
+                                 inference = TRUE,
+                                 inference.strategy = "bootstrap",
+)
+```
+
+```{r eval=FALSE, include=TRUE}
+
+
+
+```

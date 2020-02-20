@@ -113,6 +113,7 @@ str(marketReturnIN)
 marketReturnIN1 <- marketReturnIN[2:41]
 stockPriceReturnIN1 <- stockPriceReturnIN[2:41]
 str(marketReturnIN1)
+View(INMKT)
 ```
 
 ```{r eval=FALSE, include=TRUE}

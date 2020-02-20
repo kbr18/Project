@@ -7,13 +7,14 @@
 
 
 
-
 data<-merge(Tata,Mahindra, Bajaj, ICICI, LT)
 dataIN <-data[,c(4, 10, 16, 22, 28)]              
 
 data<-merge(Amada,Hokuetsu, Secom, Tokyu, Mitsubishi)
 dataJP <-data[,c(4, 10, 16, 22, 28)]
 
+View(dataJP)
+View(dataIN)
 
 TataClose <- dataIN[,1]
 MahindraClose <-dataIN[,2]
@@ -39,6 +40,8 @@ ForecastAVGIN <- TataClose*(1/(TataClose+MahindraClose+BajajClose+ICICIClose+LTC
 +ICICIClose*(1/(TataClose+MahindraClose+BajajClose+ICICIClose+LTClose))
 +LTClose*(1/(TataClose+MahindraClose+BajajClose+ICICIClose+LTClose))
 
+plot(ForecastAVGJP)
+plot(ForecastAVGIN)
 
 #JAPAN
 
@@ -64,9 +67,8 @@ head(price_forecast$upper)
 
 #Dividing the data into train and test, applying the model
 N = length(ForecastAVGJP)
-n = 0.7*N
-train = ForecastAVGJP[1:n, ]
-test  = ForecastAVGJP[(n+1):N,  ]
+train = ForecastAVGJP[1:18, ]
+test  = ForecastAVGJP[(19):N,  ]
 trainarimafit <- auto.arima(train, lambda = "auto")
 predlen=length(test)
 trainarimafit <- forecast(trainarimafit, h=predlen)
@@ -158,9 +160,8 @@ head(price_forecast$upper)
 
 #Dividing the data into train and test, applying the model
 N = length(ForecastAVGIN)
-n = 0.7*N
-train = ForecastAVGIN[1:n, ]
-test  = ForecastAVGIN[(n+1):N,  ]
+train = ForecastAVGIN[1:18,]
+test  = ForecastAVGIN[(19):N,]
 trainarimafit <- auto.arima(train, lambda = "auto")
 predlen=length(test)
 trainarimafit <- forecast(trainarimafit, h=predlen)
