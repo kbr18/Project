@@ -256,16 +256,69 @@ Step 3: Plot the weighted average price of the 5 Japanese stocks
 plot(ForecastAVGJP)
 ```
 
+ARIMA
+
+Step 4: Model Fit
+
+```{r eval=FALSE, include=TRUE}
+print(adf.test(ForecastAVGJP))
+modelfitJP <- auto.arima(ForecastAVGJP, lambda = "auto")
+```
+
+Step 5: Box test for lag=2
+
+```{r eval=FALSE, include=TRUE}
+Box.test(modelfitJP$residuals, lag= 2, type="Ljung-Box")
+```
+
+Step 6: Dividing the data into train and test, applying the model
+
+```{r eval=FALSE, include=TRUE}
+N = length(ForecastAVGJP)
+trainJP =ForecastAVGJP [1:18,]
+testJP  =ForecastAVGJP [(19):N,]
+trainarimafitJP <- auto.arima(trainJP, lambda = "auto")
+predlenJP=length(testJP)
+trainarimafitJP <- forecast(trainarimafitJP, h=predlenJP)
+```
+
+Step 7: Plotting mean predicted values vs real data
+
+```{r eval=FALSE, include=TRUE}
+meanvaluesJP <- as.vector(trainarimafitJP$mean)
+preciosJP <- as.vector(testJP$ForecastAVGJP)
+plot(meanvaluesJP, type= "l", col= "red")
+lines(preciosJP, type = "l")
+```
+
+Step 8: Dataset forecasting for the next 30 days
+
+```{r eval=FALSE, include=TRUE}
+price_forecastJP <- forecast(modelfitJP, h=30)
+```
+
+Step 9: Dataset forecast lower first 5 values
+
+```{r eval=FALSE, include=TRUE}
+plot(price_forecastJP)
+
+head(price_forecastJP$mean)
+
+head(price_forecastJP$lower)
+
+head(price_forecastJP$upper)
+```
+
 Feed Forward Neural network
 
-Step 4: Hidden layers creation
+Step 10: Hidden layers creation
 
 ```{r eval=FALSE, include=TRUE}
 alphaJP <- 1.5^(-10)
 hnJP <- length(ForecastAVGJP)/(alphaJP*(length(ForecastAVGJP)+30))
 ```
 
-Step 5: Fitting nnetar
+Step 11: Fitting nnetar
 
 ```{r eval=FALSE, include=TRUE}
 lambdaJP <- BoxCox.lambda(ForecastAVGJP)
@@ -273,13 +326,13 @@ dnn_predJP <- nnetar(ForecastAVGJP, size= hnJP, lambda = lambdaJP)
 dnn_forecastJP <- forecast(dnn_predJP, h= 30)
 ```
 
-Step 6: Plot Fitting nnetar
+Step 12: Plot Fitting nnetar
 
 ```{r eval=FALSE, include=TRUE}
 plot(dnn_forecastJP)
 ```
 
-Step 7: Recollect Closing Price for Indian Stocks
+Step 13: Recollect Closing Price for Indian Stocks
 
 ```{r eval=FALSE, include=TRUE}
 TataClose
@@ -289,7 +342,7 @@ ICICIClose
 LTClose
 ```
 
-Step 8: Calculating the weighted average price of the 5 Japanese stocks
+Step 14: Calculating the weighted average price of the 5 Japanese stocks
 
 ```{r eval=FALSE, include=TRUE}
 ForecastAVGIN <- TataClose^2*(1/(TataClose+MahindraClose+BajajClose+ICICIClose+LTClose))
@@ -299,22 +352,73 @@ ForecastAVGIN <- TataClose^2*(1/(TataClose+MahindraClose+BajajClose+ICICIClose+L
 +LTClose^2*(1/(TataClose+MahindraClose+BajajClose+ICICIClose+LTClose))
 ```
 
-Step 9: Plot the weighted average price of the 5 Indian stocks
+Step 15: Plot the weighted average price of the 5 Indian stocks
 
 ```{r eval=FALSE, include=TRUE}
 plot(ForecastAVGIN)
 ```
 
+ARIMA
+
+Step 16: Model Fit
+```{r eval=FALSE, include=TRUE}
+print(adf.test(ForecastAVGIN))
+modelfitIN <- auto.arima(ForecastAVGIN, lambda = "auto")
+```
+
+Step 17: Box test for lag=2
+
+```{r eval=FALSE, include=TRUE}
+Box.test(modelfitIN$residuals, lag= 2, type="Ljung-Box")
+```
+
+Step 18: Dividing the data into train and test, applying the model
+
+```{r eval=FALSE, include=TRUE}
+N = length(ForecastAVGIN)
+trainIN =ForecastAVGIN [1:18,]
+testIN  =ForecastAVGIN [(19):N,]
+trainarimafitIN <- auto.arima(trainIN, lambda = "auto")
+predlenIN=length(test)
+trainarimafitIN <- forecast(trainarimafitIN, h=predlenIN)
+```
+
+Step 19: Plotting mean predicted values vs real data
+
+```{r eval=FALSE, include=TRUE}
+meanvaluesIN <- as.vector(trainarimafitIN$mean)
+preciosIN <- as.vector(testIN$ForecastAVGIN)
+plot(meanvaluesIN, type= "l", col= "red")
+lines(preciosIN, type = "l")
+```
+
+Step 20: Dataset forecasting for the next 30 days
+```{r eval=FALSE, include=TRUE}
+price_forecastIN <- forecast(modelfitIN, h=30)
+```
+
+Step 21: Dataset forecast lower first 5 values
+
+```{r eval=FALSE, include=TRUE}
+plot(price_forecastIN)
+
+head(price_forecastIN$mean)
+
+head(price_forecastIN$lower)
+
+head(price_forecastIN$upper)
+```
+
 Feed Forward Neural network
 
-Step 10: Hidden layers creation
+Step 22: Hidden layers creation
 
 ```{r eval=FALSE, include=TRUE}
 alphaIN <- 1.5^(-10)
 hnIN <- length(ForecastAVGIN)/(alphaIN*(length(ForecastAVGIN)+30))
 ```
 
-Step 11: Fitting nnetar
+Step 23: Fitting nnetar
 
 ```{r eval=FALSE, include=TRUE}
 lambdaIN <- BoxCox.lambda(ForecastAVGJP)
@@ -322,7 +426,7 @@ dnn_predIN <- nnetar(ForecastAVGJP, size= hnIN, lambda = lambdaIN)
 dnn_forecastIN <- forecast(dnn_predIN, h= 30)
 ```
 
-Step 12: Plot Fitting nnetar
+Step 24: Plot Fitting nnetar
 
 ```{r eval=FALSE, include=TRUE}
 plot(dnn_forecastIN)
