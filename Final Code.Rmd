@@ -327,5 +327,3 @@ Step 12: Plot Fitting nnetar
 ```{r eval=FALSE, include=TRUE}
 plot(dnn_forecastIN)
 ```
-
-
